@@ -53,6 +53,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               Email
             </Label>
             <Input
+              className="border"
               id="email"
               placeholder="name@example.com"
               type="email"
@@ -64,6 +65,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               onChange={(event) => setEmail(event.target.value)}
             />
             <Input
+              className="border"
               id="password"
               placeholder="password"
               type="password"
