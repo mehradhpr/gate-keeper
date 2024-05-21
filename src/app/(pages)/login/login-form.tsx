@@ -12,7 +12,15 @@ export default function LoginForm() {
         const password = (form.elements.namedItem('password') as HTMLInputElement).value;
 
         const formData = { email, password };
-        console.log('Login Form Data:', formData);
+
+        // sending the form data to the server
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
     }
 
     return (
