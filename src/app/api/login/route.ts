@@ -1,22 +1,39 @@
 import { authenticate } from "@/lib/db";
 
 export async function POST(request: Request) {
-    // parsing
-    const formData = await request.json();
-    const { email, password } = formData;
+    try {
+        // Parsing
+        const formData = await request.json();
+        const { email, password } = formData;
 
-    // validation
-    if (!email || !password) {
-        return new Response('All fields are required', { status: 400 });
-    }
+        // Validation
+        if (!email || !password) {
+            return new Response(JSON.stringify({ message: 'All fields are required' }), {
+                status: 400,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        }
 
-    // business logic
-    const result = authenticate(email, password);
+        // Business logic
+        const result = await authenticate(email, password);
 
-    // response
-    if (result.success) {
-        return new Response('Login successful', { status: 200 });
-    } else {
-        return new Response('Invalid credentials', { status: 401 });
+        // Response
+        if (result.success) {
+            return new Response(JSON.stringify({ message: 'Authentication Successful', accountInfo: result.accountInfo }), {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        } else {
+            return new Response(JSON.stringify({ message: 'Failed to Authenticate' }), {
+                status: 400,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        }
+    } catch (error) {
+        console.error('Error in POST /api/authenticate:', error);
+        return new Response(JSON.stringify({ message: 'Internal Server Error' }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' },
+        });
     }
 }
