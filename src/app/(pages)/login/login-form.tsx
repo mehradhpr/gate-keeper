@@ -1,32 +1,19 @@
 'use client'
 
 import { FormEvent } from 'react';
+import { useAppContext } from '@/app/contexts/context-provider';
+import {handleClientLogIn} from "@/lib/actions";
 
 export default function LoginForm() {
 
-    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        const form = event.currentTarget;
-        const email = (form.elements.namedItem('email') as HTMLInputElement).value;
-        const password = (form.elements.namedItem('password') as HTMLInputElement).value;
-
-        const formData = { email, password };
-
-        // sending the form data to the server
-        const response = await fetch('/api/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-    }
+    const { setToken, setAccount,
+        setHasAccess, setIsAdmin } = useAppContext();
+    
 
     return (
         <div className="bg-white p-6 w-80 shadow-md rounded">
             <h2 className="text-center text-2xl font-bold mb-4">Login</h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleClientLogIn}>
                 <div className="mb-4">
                     <label className="block font-bold mb-2" htmlFor="email">
                         Email

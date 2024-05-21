@@ -4,10 +4,12 @@
 
 import { useState, useEffect } from 'react';
 
+import { useAppContext } from "@/app/contexts/context-provider";
+
 export default function DashboardPage() {
-    const [user, setUser] = useState({ firstName: '', lastName: '', email: '', role: '' });
-    const [hasAccess, setHasAccess] = useState(true); // Hardcoded value to toggle access
-    const [isAdmin, setIsAdmin] = useState(true); // Hardcoded value to toggle admin state
+const { token, account, hasAccess, isAdmin,
+    setHasAccess, setIsAdmin,
+    setToken, setAccount } = useAppContext();
 
     const handleLogout = () => {
         // Implement your logout functionality here
@@ -15,20 +17,9 @@ export default function DashboardPage() {
     };
 
     useEffect(() => {
-        // Fetch user data from API or context
-        const fetchUserData = async () => {
-            // Mock user data for demonstration purposes
-            const userData = {
-                firstName: 'John',
-                lastName: 'Doe',
-                email: 'john.doe@example.com',
-                role: 'Admin'
-            };
-            setUser(userData);
-            setIsAdmin(userData.role === 'Admin');
-        };
+        if (hasAccess) {
 
-        fetchUserData();
+        }
     }, []);
 
     return (
@@ -39,19 +30,19 @@ export default function DashboardPage() {
                     <>
                         <div className="mb-4">
                             <label className="block font-bold mb-2">First Name</label>
-                            <p className="py-2">{user.firstName}</p>
+                            <p className="py-2">{account.firstName}</p>
                         </div>
                         <div className="mb-4">
                             <label className="block font-bold mb-2">Last Name</label>
-                            <p className="py-2">{user.lastName}</p>
+                            <p className="py-2">{account.lastName}</p>
                         </div>
                         <div className="mb-4">
                             <label className="block font-bold mb-2">Email</label>
-                            <p className="py-2">{user.email}</p>
+                            <p className="py-2">{account.email}</p>
                         </div>
                         <div className="mb-4">
                             <label className="block font-bold mb-2">Role</label>
-                            <p className="py-2">{user.role}</p>
+                            <p className="py-2">{account.role}</p>
                         </div>
                         <button
                             onClick={handleLogout}

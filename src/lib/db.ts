@@ -70,3 +70,41 @@ export async function authenticate(email: string, password: string): Promise<Aut
         };
     }
 }
+
+export async function logout() {
+    // Implement your logout functionality here
+}
+
+export async function deleteAccount() {
+
+}
+
+
+export async function getAccountList_admin() {
+
+}
+
+export async function modifyFirstName_admin() {
+
+}
+
+export async function modifyLastName_admin() {
+
+}
+
+export async function modifyEmail_admin() {
+
+}
+
+export async function modifyPassword_admin() {
+
+}
+
+export async function deleteAccount_admin() {
+
+}
+
+export async function createRole_admin() {
+
+}
+

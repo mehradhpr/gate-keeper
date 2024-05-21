@@ -1,4 +1,5 @@
 import { authenticate } from "@/lib/db";
+import { generateToken } from "@/lib/jwt";
 
 export async function POST(request: Request) {
     try {
@@ -18,8 +19,10 @@ export async function POST(request: Request) {
         const result = await authenticate(email, password);
 
         // Response
-        if (result.success) {
-            return new Response(JSON.stringify({ message: 'Authentication Successful', accountInfo: result.accountInfo }), {
+        if (result.success && result.accountInfo) {
+            // create a JASON Web Token (JWT) and send it back to the client
+            const res = generateToken(result.accountInfo)
+            return new Response(JSON.stringify({ message: 'Authentication Successful', accountInfo: res }), {
                 status: 200,
                 headers: { 'Content-Type': 'application/json' },
             });
