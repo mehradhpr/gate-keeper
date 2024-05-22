@@ -1,42 +1,43 @@
 import { authenticate } from "@/lib/db";
 import { generateToken } from "@/lib/jwt";
 
-export async function POST(request: Request) {
-    try {
-        // Parsing
-        const formData = await request.json();
-        const { email, password } = formData;
+export async function POST(request: Request): Promise<Response> {
+  try {
+    // Parsing
+    const formData = await request.json();
+    const { email, password } = formData;
 
-        // Validation
-        if (!email || !password) {
-            return new Response(JSON.stringify({ message: 'All fields are required' }), {
-                status: 400,
-                headers: { 'Content-Type': 'application/json' },
-            });
-        }
-
-        // Business logic
-        const result = await authenticate(email, password);
-
-        // Response
-        if (result.success && result.accountInfo) {
-            // create a JASON Web Token (JWT) and send it back to the client
-            const res = generateToken(result.accountInfo)
-            return new Response(JSON.stringify({ message: 'Authentication Successful', accountInfo: res }), {
-                status: 200,
-                headers: { 'Content-Type': 'application/json' },
-            });
-        } else {
-            return new Response(JSON.stringify({ message: 'Failed to Authenticate' }), {
-                status: 400,
-                headers: { 'Content-Type': 'application/json' },
-            });
-        }
-    } catch (error) {
-        console.error('Error in POST /api/authenticate:', error);
-        return new Response(JSON.stringify({ message: 'Internal Server Error' }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' },
-        });
+    // Server Side Validation
+    if (!email || !password) {
+      return new Response(null, {
+        status: 400,
+        statusText: "Server Side Validation Failed for logging in",
+        headers: { "Content-Type": "application/json" },
+      });
     }
+
+    // Business logic
+    const result = await authenticate({ email, password });
+    if (!result.success || !result.account) {
+      return new Response(null, {
+        status: 400,
+        statusText: result.message,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    const tokenString = generateToken(result.account);
+
+    // Response
+    return new Response(tokenString, {
+      status: 200,
+      statusText: result.message,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    return new Response(null, {
+      status: 400,
+      statusText: "Internal Server Error for logging in",
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 }
