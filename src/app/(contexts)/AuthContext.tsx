@@ -2,23 +2,48 @@
 "use client";
 
 import { createContext, useState, useContext, ReactNode } from "react";
+import { ClientAccountInfo } from "@/interfaces/account-interface";
+import { decode } from "jsonwebtoken";
 
 interface AuthContextType {
-  isLoggedIn: boolean;
-  login: () => void;
+  login: (token: string) => void;
   logout: () => void;
+  isAuthenticated: () => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
+  const [clientUserInfo, setClientUserInfo] = useState<ClientAccountInfo>({
+    firstName: "Guest",
+    lastName: "Guest",
+    email: "Guest",
+    role: "Guest",
+  });
 
-  const login = () => setIsLoggedIn(true);
-  const logout = () => setIsLoggedIn(false);
+  // shared methods
+  const login = (token: string) => {
+    setToken(token);
+    setIsLoggedIn(true);
+    const decoded = decode(token);
+    if (decoded) {
+      setClientUserInfo(decoded as ClientAccountInfo);
+    }
+  };
+
+  const logout = () => {
+    setToken(null);
+    setIsLoggedIn(false);
+  };
+
+  const isAuthenticated = () => {
+    return token !== null && isLoggedIn;
+  };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ login, logout, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );

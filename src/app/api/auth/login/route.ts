@@ -17,7 +17,13 @@ export async function POST(request: Request): Promise<Response> {
       );
       if (isMatch) {
         // Authenticate user by returning a client token
-        const tokenString = generateToken(DBResult.account);
+        const tokenContent = {
+          email: DBResult.account.email,
+          firstName: DBResult.account.firstName,
+          lastName: DBResult.account.lastName,
+          role: DBResult.account.role,
+        };
+        const tokenString = generateToken(tokenContent);
         return new Response(JSON.stringify(tokenString), {
           status: 200,
           statusText: "User logged in successfully",
