@@ -5,11 +5,13 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Lock, Unlock } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const NavBar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(true); // Set to false initially
   const [firstName, setFirstName] = useState(""); // State to hold the first name
   const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     // Mock fetching the user's first name
@@ -20,6 +22,7 @@ const NavBar = () => {
 
   const handleLogout = () => {
     // Implement logout logic
+    router.push("/login");
     setIsLoggedIn(false);
   };
 

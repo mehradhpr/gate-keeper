@@ -3,56 +3,46 @@ import {
   DBAddAccountRequest,
   DBAddAccountResponse,
 } from "@/interfaces/db-interface";
-import { NextApiRequest, NextApiResponse } from "next";
-import { z } from "zod";
 import { hashPassword } from "@/lib/hash";
+import { NextResponse, NextRequest } from "next/server";
 
-// Validation schema
-const schema = z.object({
-  firstName: z.string().nonempty("First name is required"),
-  lastName: z.string().nonempty("Last name is required"),
-  email: z.string().email("Invalid email format"),
-  password: z.string().min(8, "Password must be at least 8 characters long"),
-  role: z.string().optional().default("user"),
-});
-
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(request: Request): Promise<Response> {
   try {
-    const formData = req.body;
-
-    // Server Side Validation
-    const result = schema.safeParse(formData);
-    if (!result.success) {
-      return res
-        .status(400)
-        .json({ message: "Validation Failed", details: result.error.errors });
-    }
-
-    const { firstName, lastName, email, password, role } = result.data;
+    const formData = await request.json();
+    const { firstName, lastName, email, password } = formData;
 
     // Hash the password before storing it in the database
     const hashedPassword = await hashPassword(password);
 
-    // Business logic
-    const dbAddAccountRequest: DBAddAccountRequest = {
+    // Add the account to the database -- FOR NOW PASS USER AS ROLE
+    const response = await database.addAccount({
       firstName,
       lastName,
       email,
       password: hashedPassword,
-      role,
-    };
+      role: "user",
+    });
 
-    const dbResponse: DBAddAccountResponse =
-      await database.addAccount(dbAddAccountRequest);
-
-    // Response
-    if (dbResponse.success) {
-      return res.status(201).json({ message: dbResponse.message });
+    if (response.success) {
+      return new Response(null, {
+        status: 201, // HTTP status code for Created
+        statusText: response.message,
+        headers: { "Content-Type": "application/json" },
+      });
     } else {
-      return res.status(409).json({ message: dbResponse.message });
+      return new Response(null, {
+        status: 400, // HTTP status code for Bad Request
+        statusText: response.message,
+        headers: { "Content-Type": "application/json" },
+      });
     }
   } catch (error) {
-    console.error("Error registering account:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    return new Response(
+      JSON.stringify({ message: "Failed to hash password" }),
+      {
+        status: 500, // HTTP status code for Internal Server Error
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 }

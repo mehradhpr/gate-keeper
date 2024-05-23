@@ -11,13 +11,13 @@ const Home = () => {
   const [isLoginForm, setIsLoginForm] = useState(true);
 
   return (
-    <div className="relative h-screen flex items-center justify-center bg-gradient-to-r from-blue-800 to-purple-600 m-5 bottom-0 rounded-3xl overflow-hidden">
+    <div className="relative h-[calc(100vh-8rem)] flex items-center justify-center bg-gradient-to-r from-blue-800 to-purple-600 m-5 rounded-3xl overflow-hidden">
       <Image
         src={background}
         alt="Background"
         layout="fill"
         objectFit="cover"
-        className="opacity-40 mt-[-50px]"
+        className="opacity-35 mt-[-50px]"
       />
       <div className="relative z-10 text-center text-white mt-[-100px]">
         <h1 className="text-5xl font-extrabold tracking-widest text-white drop-shadow-lg mb-4">

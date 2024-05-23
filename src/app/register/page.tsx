@@ -1,5 +1,3 @@
-// app/register/page.tsx
-
 "use client";
 
 import { useState } from "react";
@@ -22,9 +20,26 @@ export default function RegisterPage() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    try {
+      // Perform an API fetch from auth/register
+      const response = await fetch("./api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        console.log("User Created Successfully");
+      }
+    } catch (error) {
+      // error is propagated from the database.addAccount function
+      // TODO: Handle error response in the client side
+      console.error("There was a problem with the fetch operation:", error);
+    }
   };
 
   return (
