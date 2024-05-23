@@ -28,11 +28,11 @@ export const handleClientLogIn = async (
     if (serverResponse.ok) {
       response = await serverResponse.json();
     } else {
-      console.error("fetching login API failed", serverResponse);
+      console.error("fetching logIn API failed", serverResponse);
       return;
     }
   } catch (error) {
-    console.error("fetching login API failed", error);
+    console.error("fetching logIn API failed", error);
   }
 
   // Set the token in the context
