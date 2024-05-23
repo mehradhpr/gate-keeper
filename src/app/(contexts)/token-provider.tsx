@@ -2,7 +2,10 @@
 
 import React, { createContext, useState, ReactNode, useContext } from "react";
 
-import { TokenContextState, TokenProviderProps } from "@/interfaces/interfaces";
+import {
+  TokenContextState,
+  TokenProviderProps,
+} from "@/interfaces/context-interface";
 
 const TokenContext = createContext<TokenContextState | undefined>(undefined);
 

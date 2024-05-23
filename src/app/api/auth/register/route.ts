@@ -16,14 +16,7 @@ const schema = z.object({
   role: z.string().optional().default("user"),
 });
 
-export default async function register(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method Not Allowed" });
-  }
-
+export async function POST(req: NextApiRequest, res: NextApiResponse) {
   try {
     const formData = req.body;
 
@@ -37,11 +30,10 @@ export default async function register(
 
     const { firstName, lastName, email, password, role } = result.data;
 
-    // Business logic
-
     // Hash the password before storing it in the database
     const hashedPassword = await hashPassword(password);
 
+    // Business logic
     const dbAddAccountRequest: DBAddAccountRequest = {
       firstName,
       lastName,
