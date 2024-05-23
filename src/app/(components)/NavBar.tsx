@@ -6,24 +6,30 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Lock, Unlock } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/(contexts)/AuthContext";
 
 const NavBar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // Set to false initially
-  const [firstName, setFirstName] = useState(""); // State to hold the first name
   const pathname = usePathname();
   const router = useRouter();
+  const { isAuthenticated } = useAuth();
+  const { getClientUserInfo } = useAuth();
+  const { logout } = useAuth();
+  const [firstName, setFirstName] = useState("Guest");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Mock fetching the user's first name
-    if (isLoggedIn) {
-      setFirstName("John"); // Replace with real fetching logic
+    if (isAuthenticated()) {
+      setIsLoggedIn(true);
+      setFirstName(getClientUserInfo().firstName);
+    } else {
+      setIsLoggedIn(false);
     }
-  }, [isLoggedIn]);
+  }, [isAuthenticated]);
 
   const handleLogout = () => {
     // Implement logout logic
     router.push("/login");
-    setIsLoggedIn(false);
+    logout();
   };
 
   const buttonClass = "bg-blue-600 hover:bg-blue-700 text-white rounded-md";
@@ -54,12 +60,15 @@ const NavBar = () => {
                   Account Settings
                 </Button>
               </Link>
-              <Button
-                onClick={handleLogout}
-                className="bg-blue-600 hover:bg-red-600 text-white rounded-md"
-              >
-                Log Out
-              </Button>
+              <Link href="/">
+                <Button
+                  onClick={handleLogout}
+                  className="bg-blue-600 hover:bg-red-600 text-white rounded-md"
+                >
+                  Log Out
+                </Button>
+              </Link>
+
               <Unlock className="ml-4 text-black" />
             </>
           ) : (

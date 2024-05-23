@@ -2,18 +2,27 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/app/(contexts)/AuthContext";
-import { decode } from "jsonwebtoken";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  const { login, isAuthenticated } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      router.push("/dashboard");
+    }
+  }, [isAuthenticated, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -27,7 +36,7 @@ export default function LoginPage() {
     console.log("Form submitted:", formData);
 
     try {
-      const response = await fetch("api/auth/login", {
+      const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -36,9 +45,12 @@ export default function LoginPage() {
       });
 
       if (response.ok) {
+        const { token } = await response.json();
+        login(token);
         console.log("User logged in successfully");
-        const token = await response.json();
-        console.log("Token:", decode(token));
+        router.push("/dashboard"); // Redirect after successful login
+      } else {
+        console.error("Login failed:", response.statusText);
       }
     } catch (error) {
       console.error("There was a problem with the fetch operation:", error);
