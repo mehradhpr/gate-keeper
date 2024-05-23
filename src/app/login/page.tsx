@@ -6,12 +6,15 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToken } from "@/app/(contexts)/token-provider";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  const { token, setToken } = useToken();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -35,6 +38,11 @@ export default function LoginPage() {
 
       if (response.ok) {
         console.log("User logged in successfully");
+        const token = await response.json();
+        if (token) {
+          setToken(token);
+        }
+        console.log("Token:", token);
       }
     } catch (error) {
       console.error("There was a problem with the fetch operation:", error);

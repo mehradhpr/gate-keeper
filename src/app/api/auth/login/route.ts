@@ -1,5 +1,6 @@
 import { database } from "@/lib/db";
 import { comparePassword } from "@/lib/hash";
+import { generateToken } from "@/lib/jwt";
 
 export async function POST(request: Request): Promise<Response> {
   const formData = await request.json();
@@ -15,7 +16,9 @@ export async function POST(request: Request): Promise<Response> {
         DBResult.account.password,
       );
       if (isMatch) {
-        return new Response(null, {
+        // Authenticate user by returning a client token
+        const tokenString = generateToken(DBResult.account);
+        return new Response(JSON.stringify(tokenString), {
           status: 200,
           statusText: "User logged in successfully",
           headers: { "Content-Type": "application/json" },
