@@ -1,10 +1,5 @@
 import { database } from "@/lib/db";
-import {
-  DBAddAccountRequest,
-  DBAddAccountResponse,
-} from "@/interfaces/db-interface";
 import { hashPassword } from "@/lib/hash";
-import { NextResponse, NextRequest } from "next/server";
 
 export async function POST(request: Request): Promise<Response> {
   try {
@@ -37,12 +32,10 @@ export async function POST(request: Request): Promise<Response> {
       });
     }
   } catch (error) {
-    return new Response(
-      JSON.stringify({ message: "Failed to hash password" }),
-      {
-        status: 500, // HTTP status code for Internal Server Error
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+    return new Response(null, {
+      status: 500,
+      statusText: "Internal Server Error",
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
