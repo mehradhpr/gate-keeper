@@ -1,103 +1,137 @@
 import { PrismaClient, Account } from "@prisma/client";
 import {
-  DBAuthenticateRequestInfo,
-  DBAuthenticateResponse,
-  DBRegisterRequestInfo,
-  DBRegisterResponse,
+  DBAddAccountRequest,
+  DBAddAccountResponse,
+  DBGetAccountByEmailRequest,
+  DBGetAccountByEmailResponse,
+  DBGetAllAccountsRequest,
+  DBGetAllAccountsResponse,
+  DBDeleteAccountByEmailRequest,
+  DBDeleteAccountByEmailResponse,
 } from "@/interfaces/db-interface";
-import { generateToken } from "@/lib/jwt";
-import { ClientAccountInfo } from "@/interfaces/interfaces";
+import { ServerAccountInfo } from "@/interfaces/account-interface";
 
 const prisma = new PrismaClient();
 
-export async function createAccount(
-  registerInfo: DBRegisterRequestInfo,
-): Promise<DBRegisterResponse> {
-  const { firstName, lastName, email, password, role } = registerInfo;
+/**
+ * Database module
+ */
+export module database {
+  /**
+   * Adds an account to the database
+   * @param request - The account information to be added (firstName, lastName, email, password, role)
+   * @returns DBAddAccountResponse - The response of the operation (success, message)
+   */
+  export async function addAccount(
+    request: DBAddAccountRequest,
+  ): Promise<DBAddAccountResponse> {
+    const { firstName, lastName, email, password, role } = request;
 
-  try {
-    // Verifying if the account already exists
-    const existingAccount = await prisma.account.findUnique({
-      where: { email },
-    });
+    try {
+      // Verifying if the account already exists
+      const existingAccount = await prisma.account.findUnique({
+        where: { email },
+      });
 
-    if (existingAccount) {
-      return { success: false, message: "Account already exists" };
+      if (existingAccount) {
+        return { success: false, message: "Account already exists" };
+      }
+
+      // Creating the account
+      await prisma.account.create({
+        data: {
+          firstName,
+          lastName,
+          email,
+          password,
+          role,
+        },
+      });
+      return { success: true, message: "Account created successfully" };
+    } catch (error) {
+      return { success: false, message: "Failed to create account" };
     }
-
-    // Creating the account
-    await prisma.account.create({
-      data: {
-        firstName,
-        lastName,
-        email,
-        password,
-        role,
-      },
-    });
-    return { success: true, message: "Account created successfully" };
-  } catch (error) {
-    return { success: false, message: "Failed to create account" };
   }
-}
 
-export async function authenticate(
-  authenticateInfo: DBAuthenticateRequestInfo,
-): Promise<DBAuthenticateResponse> {
-  try {
-    const { email, password } = authenticateInfo;
-    // Finding the account by email and password
-    const account = await prisma.account.findFirst({
-      where: {
-        email,
-        password,
-      },
-      select: {
-        firstName: true,
-        lastName: true,
-        email: true,
-        role: true,
-      },
-    });
+  /**
+   * Retrieves an account by its email
+   * @param request - The email of the account to be retrieved
+   * @returns DBGetAccountByEmailResponse - The response of the operation (success, message, account)
+   */
+  export async function getAccountByEmail(
+    request: DBGetAccountByEmailRequest,
+  ): Promise<DBGetAccountByEmailResponse> {
+    const { email } = request;
 
-    if (!account) {
+    try {
+      // Finding the account by email
+      const account = await prisma.account.findUnique({
+        where: { email },
+      });
+
+      if (!account) {
+        return {
+          success: false,
+          message: "Account not found",
+        };
+      }
+
+      return {
+        success: true,
+        message: "Account retrieved successfully",
+        account: account as ServerAccountInfo,
+      };
+    } catch (error) {
       return {
         success: false,
-        message: "Account not found",
+        message: "Something went wrong while retrieving the account",
       };
     }
+  }
 
-    // Generating token
-    const token = generateToken(account);
+  /**
+   * Retrieves all the accounts from the database
+   * @param _request - The request object
+   * @returns DBGetAllAccountsResponse - The response of the operation (success, accounts)
+   */
+  export async function getAllAccounts(
+    _request: DBGetAllAccountsRequest,
+  ): Promise<DBGetAllAccountsResponse> {
+    try {
+      const accounts = await prisma.account.findMany();
 
-    return {
-      success: true,
-      message: "Account authenticated successfully",
-    };
-  } catch (error) {
-    return {
-      success: false,
-      message: "Something went went while authenticating",
-    };
+      return { success: true, accounts: accounts as ServerAccountInfo[] };
+    } catch (error) {
+      return { success: false, accounts: [] };
+    }
+  }
+
+  /**
+   * Deletes an account by its email
+   * @param request - The email of the account to be deleted
+   * @returns DBDeleteAccountByEmailResponse - The response of the operation (success, message)
+   */
+  export async function deleteAccountByEmail(
+    request: DBDeleteAccountByEmailRequest,
+  ): Promise<DBDeleteAccountByEmailResponse> {
+    const { email } = request;
+
+    try {
+      const account = await prisma.account.findUnique({
+        where: { email },
+      });
+
+      if (!account) {
+        return { success: false, message: "Account not found" };
+      }
+
+      await prisma.account.delete({
+        where: { email },
+      });
+
+      return { success: true, message: "Account deleted successfully" };
+    } catch (error) {
+      return { success: false, message: "Failed to delete account" };
+    }
   }
 }
-
-export async function logout() {
-  // Implement your logout functionality here
-}
-
-export async function deleteAccount() {}
-
-export async function getAccountList_admin() {}
-
-export async function modifyFirstName_admin() {}
-
-export async function modifyLastName_admin() {}
-
-export async function modifyEmail_admin() {}
-
-export async function modifyPassword_admin() {}
-
-export async function deleteAccount_admin() {}
-
-export async function createRole_admin() {}
