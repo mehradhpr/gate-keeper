@@ -42,8 +42,9 @@ export default function LoginPage() {
         if (token) {
           setToken(token);
         }
-        console.log("Token:", token);
       }
+
+      console.log("Token is:", token);
     } catch (error) {
       console.error("There was a problem with the fetch operation:", error);
     }
