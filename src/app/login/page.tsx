@@ -1,13 +1,12 @@
-// app/login/page.tsx
-
 "use client";
-
+import React from "react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/app/(contexts)/AuthContext";
+import { useLoading } from "@/app/(contexts)/LoadingContext";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -17,6 +16,7 @@ export default function LoginPage() {
 
   const { login, isAuthenticated } = useAuth();
   const router = useRouter();
+  const { setLoading } = useLoading();
 
   useEffect(() => {
     if (isAuthenticated()) {
@@ -34,6 +34,7 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
+    setLoading(true);
 
     try {
       const response = await fetch("/api/auth/login", {
@@ -54,6 +55,8 @@ export default function LoginPage() {
       }
     } catch (error) {
       console.error("There was a problem with the fetch operation:", error);
+    } finally {
+      setLoading(false);
     }
   };
 

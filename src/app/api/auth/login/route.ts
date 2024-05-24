@@ -23,7 +23,9 @@ export async function POST(request: Request): Promise<Response> {
           lastName: DBResult.account.lastName,
           role: DBResult.account.role,
         };
+
         const tokenString = generateToken(tokenContent);
+
         return new Response(JSON.stringify(tokenString), {
           status: 200,
           statusText: "User logged in successfully",

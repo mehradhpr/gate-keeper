@@ -1,17 +1,16 @@
-// src/utils/jwt.ts
-
 import jwt, { SignOptions, VerifyOptions, JwtPayload } from "jsonwebtoken";
-import fs from "fs";
-import path from "path";
+import dotenv from "dotenv";
 
-const privateKey = fs.readFileSync(
-  path.join(process.cwd(), "private.pem"),
-  "utf8",
-);
-const publicKey = fs.readFileSync(
-  path.join(process.cwd(), "public.pem"),
-  "utf8",
-);
+// Load environment variables from .env file
+dotenv.config();
+
+// Read the keys directly from environment variables
+const privateKey = process.env.PRIVATE_KEY ?? '';
+const publicKey = process.env.PUBLIC_KEY ?? '';
+
+if (!privateKey || !publicKey) {
+  throw new Error('Environment variables PRIVATE_KEY and PUBLIC_KEY must be set');
+}
 
 export function generateToken(payload: object): string {
   const signOptions: SignOptions = {
@@ -19,7 +18,13 @@ export function generateToken(payload: object): string {
     algorithm: "RS256",
   };
 
-  return jwt.sign(payload, privateKey, signOptions);
+  try {
+    const token = jwt.sign(payload, privateKey, signOptions);
+    return token;
+  } catch (error) {
+    console.error('Error generating token:', error);
+    throw new Error('Token generation failed');
+  }
 }
 
 export function verifyToken(token: string): JwtPayload | null | string {
@@ -28,16 +33,10 @@ export function verifyToken(token: string): JwtPayload | null | string {
   };
 
   try {
-    return jwt.verify(token, publicKey, verifyOptions);
-  } catch (err) {
+    const decoded = jwt.verify(token, publicKey, verifyOptions);
+    return decoded as JwtPayload;
+  } catch (error) {
+    console.error('Error verifying token:', error);
     return null; // Token verification failed
-  }
-}
-
-export function decodeToken(token: string): JwtPayload | null {
-  try {
-    return jwt.decode(token) as JwtPayload;
-  } catch (err) {
-    return null; // Token decoding failed
   }
 }

@@ -2,9 +2,6 @@
 
 import { useState } from "react";
 import { useAuth } from "@/app/(contexts)/AuthContext";
-import Image from "next/image";
-import { Button } from "@/components/ui/button"; // Assuming you have a button component
-import background from "../../public/home.webp"; // Adjust the path if necessary
 
 const Home = () => {
   const { login } = useAuth();

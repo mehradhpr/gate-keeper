@@ -1,2 +1,8 @@
 Naming Conventions:
 - API routes: camelCase
+
+
+## libraries used
+Dotenv: To get environment variables values from a .env file
+
+Algorithm to sign the JWT token: RS256

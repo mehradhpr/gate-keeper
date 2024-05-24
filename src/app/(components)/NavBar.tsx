@@ -24,7 +24,7 @@ const NavBar = () => {
     } else {
       setIsLoggedIn(false);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, getClientUserInfo]);
 
   const handleLogout = () => {
     // Implement logout logic
