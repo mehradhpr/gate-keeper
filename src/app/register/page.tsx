@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,7 +9,7 @@ import {useRouter} from "next/navigation";
 import {el} from "date-fns/locale";
 
 export default function RegisterPage() {
-  const { login } = useAuth();
+  const { register, isAuthenticated } = useAuth();
 
   const router = useRouter();
 
@@ -20,6 +20,12 @@ export default function RegisterPage() {
     password: "",
   });
 
+  useEffect(() => {
+    if (isAuthenticated()) {
+      router.push("/dashboard");
+    }
+  }, [isAuthenticated, router]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -29,44 +35,7 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      // Perform an API fetch from auth/register
-      const response = await fetch("./api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        console.log("User Created Successfully");
-        const response = await fetch("./api/auth/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({email: formData.email, password: formData.password}),
-        });
-        if (response.ok) {
-          const { token } = await response.json();
-          if (!token) {
-            console.error("Token not found in response");
-          }
-          login(token);
-          console.log("User logged in successfully");
-          // Redirect after successful login
-          router.push("/dashboard");
-        }
-        else {
-          console.error("Login failed:", response.statusText);
-        }
-      }
-    } catch (error) {
-      // error is propagated from the database.addAccount function
-      // TODO: Handle error response in the client side
-      console.error("There was a problem with the fetch operation:", error);
-    }
+    register(formData);
   };
 
   return (

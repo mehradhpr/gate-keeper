@@ -5,6 +5,7 @@ import { ClientAccountInfo } from "@/interfaces/account-interface";
 import { decode } from "jsonwebtoken";
 import Cookies from "js-cookie";
 import { useLoading } from "./LoadingContext";
+import {useRouter} from "next/navigation";
 
 interface AuthContextType {
   login: (loginFormData: {
@@ -12,6 +13,12 @@ interface AuthContextType {
     password: string;
   }) => void;
   logout: () => void;
+  register: (registerFormData: {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+  }) => void;
   isAuthenticated: () => boolean;
   getClientUserInfo: () => ClientAccountInfo;
 }
@@ -19,6 +26,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [token, setToken] = useState<string | null>(null);
   const [clientUserInfo, setClientUserInfo] = useState<ClientAccountInfo>({
@@ -67,6 +75,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setClientUserInfo(decoded as ClientAccountInfo);
         }
         console.log("User logged in successfully");
+        router.push("/dashboard");
       } else {
         console.error("Login failed:", response.statusText);
       }
@@ -89,6 +98,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const register = async (registerFormData: {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+  }) => {
+    try {
+      // Perform an API fetch from auth/register
+      setLoading(true);
+      const response = await fetch("./api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(registerFormData),
+      });
+      if (response.ok) {
+        console.log('User registered successfully');
+        await login({email: registerFormData.email, password: registerFormData.password});
+      }
+    } catch (error) {
+      // error is propagated from the database.addAccount function
+      // TODO: Handle error response in the client side
+      console.error("There was a problem with the fetch operation:", error);
+    }
+  }
+
   const isAuthenticated = () => {
     return token !== null && isLoggedIn;
   };
@@ -99,7 +135,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ login, logout, isAuthenticated, getClientUserInfo }}
+      value={{ login, logout, register, isAuthenticated, getClientUserInfo }}
     >
       {children}
     </AuthContext.Provider>

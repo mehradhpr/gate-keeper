@@ -16,7 +16,6 @@ export default function LoginPage() {
 
   const { login, isAuthenticated } = useAuth();
   const router = useRouter();
-  const { setLoading } = useLoading();
 
   useEffect(() => {
     if (isAuthenticated()) {
