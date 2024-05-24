@@ -7,20 +7,13 @@ import { Button } from "@/components/ui/button"; // Assuming you have a button c
 import background from "../../public/home.webp"; // Adjust the path if necessary
 
 const Home = () => {
-  const { isLoggedIn } = useAuth();
+  const { login } = useAuth();
   const [isLoginForm, setIsLoginForm] = useState(true);
 
   return (
     <div className="relative h-[calc(100vh-8rem)] flex items-center justify-center bg-gradient-to-r from-blue-800 to-purple-600 m-5 rounded-3xl overflow-hidden">
-      <Image
-        src={background}
-        alt="Background"
-        layout="fill"
-        objectFit="cover"
-        className="opacity-35 mt-[-50px]"
-      />
       <div className="relative z-10 text-center text-white mt-[-100px]">
-        <h1 className="text-5xl font-extrabold tracking-widest text-white drop-shadow-lg mb-4">
+        <h1 className="text-5xl font-extrabold tracking-widest text-black drop-shadow-lg mb-4">
           GateKeeper
         </h1>
         <h3 className="text-2xl mb-8">
