@@ -1,12 +1,16 @@
 "use client";
 
-import { createContext, useState, useContext, ReactNode, useEffect } from "react";
+import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
 import { ClientAccountInfo } from "@/interfaces/account-interface";
 import { decode } from "jsonwebtoken";
 import Cookies from "js-cookie";
+import { useLoading } from "./LoadingContext";
 
 interface AuthContextType {
-  login: (token: string) => void;
+  login: (loginFormData: {
+    email: string;
+    password: string;
+  }) => void;
   logout: () => void;
   isAuthenticated: () => boolean;
   getClientUserInfo: () => ClientAccountInfo;
@@ -24,6 +28,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     role: "Guest",
   });
 
+  const { setLoading } = useLoading();
+
   // Load token and user info from cookies if they exist
   useEffect(() => {
     const savedToken = Cookies.get("authToken");
@@ -38,13 +44,36 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   // shared methods
-  const login = (token: string) => {
-    Cookies.set("authToken", token, { expires: 7, secure: true });
-    setToken(token);
-    setIsLoggedIn(true);
-    const decoded = decode(token);
-    if (decoded) {
-      setClientUserInfo(decoded as ClientAccountInfo);
+  const login = async (loginFormData: {
+    email: string;
+    password: string;
+  }) => {
+    try {
+      setLoading(true);
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(loginFormData),
+      });
+      if (response.ok) {
+        const token = await response.json();
+        Cookies.set("authToken", token, { expires: 7, secure: true });
+        setToken(token);
+        setIsLoggedIn(true);
+        const decoded = decode(token);
+        if (decoded) {
+          setClientUserInfo(decoded as ClientAccountInfo);
+        }
+        console.log("User logged in successfully");
+      } else {
+        console.error("Login failed:", response.statusText);
+      }
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -33,28 +33,8 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        const token = await response.json();
-        login(token);
-        console.log("User logged in successfully");
-      } else {
-        console.error("Login failed:", response.statusText);
-      }
-    } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
-    } finally {
-    }
-  };
+    login(formData)
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center text-gray-100">
