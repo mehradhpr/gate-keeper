@@ -20,12 +20,12 @@ const Home = () => {
             backgroundSize: "200% 200%",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
-            animation: "gradient-wave 2s ease infinite"
+            animation: "gradient-wave 3s ease infinite"
           }}
         >
           {title}
         </motion.h1>
-        <h3 className="text-2xl mb-8">
+        <h3 className="text-2xl mb-8 drop-shadow-lg">
           A Secure, Advanced, and Open Source Authentication System
         </h3>
       </div>
