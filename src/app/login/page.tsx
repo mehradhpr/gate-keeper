@@ -33,8 +33,6 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    setLoading(true);
 
     try {
       const response = await fetch("/api/auth/login", {
@@ -46,17 +44,15 @@ export default function LoginPage() {
       });
 
       if (response.ok) {
-        const { token } = await response.json();
+        const token = await response.json();
         login(token);
         console.log("User logged in successfully");
-        router.push("/dashboard"); // Redirect after successful login
       } else {
         console.error("Login failed:", response.statusText);
       }
     } catch (error) {
       console.error("There was a problem with the fetch operation:", error);
     } finally {
-      setLoading(false);
     }
   };
 

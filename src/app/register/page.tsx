@@ -4,8 +4,15 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@/app/(contexts)/AuthContext";
+import {useRouter} from "next/navigation";
+import {el} from "date-fns/locale";
 
 export default function RegisterPage() {
+  const { login } = useAuth();
+
+  const router = useRouter();
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -34,6 +41,26 @@ export default function RegisterPage() {
 
       if (response.ok) {
         console.log("User Created Successfully");
+        const response = await fetch("./api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({email: formData.email, password: formData.password}),
+        });
+        if (response.ok) {
+          const { token } = await response.json();
+          if (!token) {
+            console.error("Token not found in response");
+          }
+          login(token);
+          console.log("User logged in successfully");
+          // Redirect after successful login
+          router.push("/dashboard");
+        }
+        else {
+          console.error("Login failed:", response.statusText);
+        }
       }
     } catch (error) {
       // error is propagated from the database.addAccount function

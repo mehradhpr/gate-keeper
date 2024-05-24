@@ -13,6 +13,7 @@ if (!privateKey || !publicKey) {
 }
 
 export function generateToken(payload: object): string {
+  console.log('Generating token with payload:', payload)
   const signOptions: SignOptions = {
     expiresIn: "1h",
     algorithm: "RS256",

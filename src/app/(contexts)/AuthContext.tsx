@@ -1,9 +1,9 @@
-// app/context/AuthContext.tsx
 "use client";
 
-import { createContext, useState, useContext, ReactNode } from "react";
+import { createContext, useState, useContext, ReactNode, useEffect } from "react";
 import { ClientAccountInfo } from "@/interfaces/account-interface";
 import { decode } from "jsonwebtoken";
+import Cookies from "js-cookie";
 
 interface AuthContextType {
   login: (token: string) => void;
@@ -24,8 +24,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     role: "Guest",
   });
 
+  // Load token and user info from cookies if they exist
+  useEffect(() => {
+    const savedToken = Cookies.get("authToken");
+    if (savedToken) {
+      setToken(savedToken);
+      setIsLoggedIn(true);
+      const decoded = decode(savedToken);
+      if (decoded) {
+        setClientUserInfo(decoded as ClientAccountInfo);
+      }
+    }
+  }, []);
+
   // shared methods
   const login = (token: string) => {
+    Cookies.set("authToken", token, { expires: 7, secure: true });
     setToken(token);
     setIsLoggedIn(true);
     const decoded = decode(token);
@@ -35,8 +49,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = () => {
+    Cookies.remove("authToken");
     setToken(null);
     setIsLoggedIn(false);
+    setClientUserInfo({
+      firstName: "Guest",
+      lastName: "Guest",
+      email: "Guest",
+      role: "Guest",
+    });
   };
 
   const isAuthenticated = () => {
