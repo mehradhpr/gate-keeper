@@ -87,15 +87,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = () => {
-    Cookies.remove("authToken");
-    setToken(null);
-    setIsLoggedIn(false);
-    setClientUserInfo({
-      firstName: "Guest",
-      lastName: "Guest",
-      email: "Guest",
-      role: "Guest",
-    });
+    try {
+      setLoading(true);
+      Cookies.remove("authToken");
+      setToken(null);
+      setIsLoggedIn(false);
+      setClientUserInfo({
+        firstName: "Guest",
+        lastName: "Guest",
+        email: "Guest",
+        role: "Guest",
+      });
+    }
+    catch (error) {
+      console.error("There was a problem with logging out:", error);
+    }
+    finally {
+      setLoading(false);
+      console.log('User logged out successfully');
+    }
   };
 
   const register = async (registerFormData: {
@@ -122,6 +132,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // error is propagated from the database.addAccount function
       // TODO: Handle error response in the client side
       console.error("There was a problem with the fetch operation:", error);
+    }
+    finally {
+      setLoading(false);
     }
   }
 
