@@ -9,6 +9,11 @@ Algorithm to sign the JWT token: RS256
 
 Uses HTTP-only cookies to store the JWT token for enhanced security preventing XSS attacks
 
+Notes about database:
+- An Account must always have one and only one role assigned to it - Default role is 'User'
+- A role can have zero to many permissions assigned to it
+- A permission can be assigned to zero to many roles
+
 ---------- Milestone 1 ----------
 
 TODO: Implement role based access control (RBAC) - Admin, User, Guest, each with a different dashboard - Just a simple dashboard with a message

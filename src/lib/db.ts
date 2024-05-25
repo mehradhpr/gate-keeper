@@ -17,6 +17,8 @@ const prisma = new PrismaClient();
  * Database module
  */
 export module database {
+
+
   /**
    * Adds an account to the database
    * @param request - The account information to be added (firstName, lastName, email, password, role)
@@ -134,4 +136,108 @@ export module database {
       return { success: false, message: "Failed to delete account" };
     }
   }
+
+  /**
+   * Updates an account's first name by its email
+   * @param request - email of the account to be updated and the new first name
+   * @returns DBUpdateAccountByEmailResponse - The response of the operation (success, message)
+   */
+  export async function updateAccountFirstNameByEmail() {
+
+  }
+
+  /**
+   * Updates an account's last name by its email
+   * @param request - email of the account to be updated and the new last name
+   * @returns DBUpdateAccountByEmailResponse - The response of the operation (success, message)
+   */
+  export async function updateAccountLastNameByEmail() {
+
+  }
+
+  /**
+   * Updates an account's role by its email
+   * @param request - email of the account to be updated and the new password
+   * @returns  - The response of the operation (success, message)
+   */
+  export async function updateAccountRoleByEmail() {
+
+  }
+
+  // Permissions
+
+  /**
+   * Create a new permission
+   * @param request - name of the permission to be created
+   * @returns DBUpdateAccountByEmailResponse - The response of the operation (success, message)
+   */
+  export async function createPermission() {
+
+  }
+
+  /**
+   * Delete a permission
+   * @param request - name of the permission to be deleted
+   * @returns DBUpdateAccountByEmailResponse - The response of the operation (success, message)
+   */
+  export async function deletePermission() {
+
+  }
+
+  /**
+   * Assign a permission to a role
+   * @param request - name of the permission and name of the role to be assigned
+   * @returns DBUpdateAccountByEmailResponse - The response of the operation (success, message)
+   */
+  export async function assignPermissionToRole() {
+
+  }
+
+  /**
+   * Remove a permission from a role
+   * @param request - name of the permission and name of the role to be removed
+   * @returns DBUpdateAccountByEmailResponse - The response of the operation (success, message)
+   */
+  export async function removePermissionFromRole() {
+
+  }
+
+  /**
+   * Get all permissions
+   * @param request - none
+   * @returns DBUpdateAccountByEmailResponse - The response of the operation (success, message)
+   */
+  export async function getAllPermissions() {
+
+  }
+
+  // Roles
+
+  /**
+   * Create a new role
+   * @param request - name of the role to be created
+   * @returns DBUpdateAccountByEmailResponse - The response of the operation (success, message)
+   */
+  export async function createRole() {
+
+  }
+
+  /**
+   * Delete a role
+   * @param request - name of the role to be deleted
+   * @returns DBUpdateAccountByEmailResponse - The response of the operation (success, message)
+   */
+  export async function deleteRole() {
+
+  }
+
+  /**
+   * Get all roles
+   * @param request - none
+   * @returns DBUpdateAccountByEmailResponse - The response of the operation (success, message)
+   */
+  export async function getAllRoles() {
+
+  }
+
 }
