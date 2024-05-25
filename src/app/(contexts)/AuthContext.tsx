@@ -3,9 +3,8 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
 import { ClientAccountInfo } from "@/interfaces/account-interface";
 import { decode } from "jsonwebtoken";
-import Cookies from "js-cookie";
 import { useLoading } from "./LoadingContext";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface AuthContextType {
   login: (loginFormData: {
@@ -28,7 +27,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
   const [clientUserInfo, setClientUserInfo] = useState<ClientAccountInfo>({
     firstName: "Guest",
     lastName: "Guest",
@@ -38,17 +36,39 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const { setLoading } = useLoading();
 
-  // Load token and user info from cookies if they exist
-  useEffect(() => {
-    const savedToken = Cookies.get("authToken");
-    if (savedToken) {
-      setToken(savedToken);
-      setIsLoggedIn(true);
-      const decoded = decode(savedToken);
-      if (decoded) {
-        setClientUserInfo(decoded as ClientAccountInfo);
+  const fetchUserInfo = async () => {
+    try {
+      const response = await fetch("/api/auth/user", {
+        method: "GET",
+        credentials: "include",
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setIsLoggedIn(true);
+        setClientUserInfo(data);
+      } else {
+        setIsLoggedIn(false);
+        setClientUserInfo({
+          firstName: "Guest",
+          lastName: "Guest",
+          email: "Guest",
+          role: "Guest",
+        });
       }
+    } catch (error) {
+      setIsLoggedIn(false);
+      setClientUserInfo({
+        firstName: "Guest",
+        lastName: "Guest",
+        email: "Guest",
+        role: "Guest",
+      });
     }
+  };
+
+  // Load user info from an authenticated endpoint
+  useEffect(() => {
+    fetchUserInfo();
   }, []);
 
   // shared methods
@@ -64,18 +84,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(loginFormData),
+        credentials: "include", // Ensure cookies are included in the requests
       });
       if (response.ok) {
-        const token = await response.json();
-        Cookies.set("authToken", token, { expires: 7, secure: true });
-        setToken(token);
-        setIsLoggedIn(true);
-        const decoded = decode(token);
-        if (decoded) {
-          setClientUserInfo(decoded as ClientAccountInfo);
-        }
-        console.log("User logged in successfully");
+        await fetchUserInfo(); // Fetch user info after login
         router.push("/dashboard");
+        console.log("User logged in successfully");
       } else {
         console.error("Login failed:", response.statusText);
       }
@@ -86,25 +100,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
     try {
       setLoading(true);
-      Cookies.remove("authToken");
-      setToken(null);
-      setIsLoggedIn(false);
-      setClientUserInfo({
-        firstName: "Guest",
-        lastName: "Guest",
-        email: "Guest",
-        role: "Guest",
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
       });
-    }
-    catch (error) {
-      console.error("There was a problem with logging out:", error);
-    }
-    finally {
+      if (response.ok) {
+        setIsLoggedIn(false);
+        setClientUserInfo({
+          firstName: "Guest",
+          lastName: "Guest",
+          email: "Guest",
+          role: "Guest",
+        });
+        console.log("User logged out successfully");
+      } else {
+        console.error("Logout failed:", response.statusText);
+      }
+    } catch (error) {
+      console.error("There was a problem with the logout operation:", error);
+    } finally {
       setLoading(false);
-      console.log('User logged out successfully');
     }
   };
 
@@ -115,31 +133,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     lastName: string;
   }) => {
     try {
-      // Perform an API fetch from auth/register
       setLoading(true);
-      const response = await fetch("./api/auth/register", {
+      const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(registerFormData),
+        credentials: "include",
       });
       if (response.ok) {
-        console.log('User registered successfully');
-        await login({email: registerFormData.email, password: registerFormData.password});
+        await login({ email: registerFormData.email, password: registerFormData.password });
+        console.log("User registered successfully");
       }
     } catch (error) {
-      // error is propagated from the database.addAccount function
-      // TODO: Handle error response in the client side
-      console.error("There was a problem with the fetch operation:", error);
-    }
-    finally {
+      console.error("There was a problem with the registration operation:", error);
+    } finally {
       setLoading(false);
     }
-  }
+  };
 
   const isAuthenticated = () => {
-    return token !== null && isLoggedIn;
+    return isLoggedIn;
   };
 
   const getClientUserInfo = () => {

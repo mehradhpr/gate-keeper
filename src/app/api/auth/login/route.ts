@@ -6,42 +6,49 @@ export async function POST(request: Request): Promise<Response> {
   const formData = await request.json();
 
   try {
-    const DBResult = await database.getAccountByEmail({
+    const dbResponse = await database.getAccountByEmail({
       email: formData.email,
     });
-    if (DBResult.success && DBResult.account) {
+    if (dbResponse.success && dbResponse.account) {
       // Check if the password is correct
       const isMatch = await comparePassword(
         formData.password,
-        DBResult.account.password,
+        dbResponse.account.password
       );
       if (isMatch) {
-        // Authenticate user by returning a client token
+        // Authenticate user by generating a token
         const tokenContent = {
-          email: DBResult.account.email,
-          firstName: DBResult.account.firstName,
-          lastName: DBResult.account.lastName,
-          role: DBResult.account.role,
+          email: dbResponse.account.email,
+          firstName: dbResponse.account.firstName,
+          lastName: dbResponse.account.lastName,
+          role: dbResponse.account.role,
         };
 
         const tokenString = generateToken(tokenContent);
 
-        return new Response(JSON.stringify(tokenString), {
+        // Set the HTTP-only, Secure cookie
+        const headers = new Headers();
+        headers.append(
+          "Set-Cookie",
+          `authToken=${tokenString}; HttpOnly; Secure; Path=/; Max-Age=604800`
+        );
+
+        return new Response(null, {
           status: 200,
-          statusText: "User logged in successfully",
-          headers: { "Content-Type": "application/json" },
+          statusText: "User logged in successfully, and token is set",
+          headers: headers,
         });
       } else {
         return new Response(null, {
           status: 401,
-          statusText: "Unauthorized",
+          statusText: "Unauthorized, invalid password",
           headers: { "Content-Type": "application/json" },
         });
       }
     } else {
       return new Response(null, {
         status: 404,
-        statusText: DBResult.message,
+        statusText: dbResponse.message,
         headers: { "Content-Type": "application/json" },
       });
     }
