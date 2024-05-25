@@ -48,7 +48,7 @@ export async function POST(request: Request): Promise<Response> {
     } else {
       return new Response(null, {
         status: 404,
-        statusText: dbResponse.message,
+        statusText: `Unauthorized, from DB: ${dbResponse.message}`,
         headers: { "Content-Type": "application/json" },
       });
     }

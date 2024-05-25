@@ -55,6 +55,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           role: "Guest",
         });
       }
+      console.log(response.statusText);
     } catch (error) {
       setIsLoggedIn(false);
       setClientUserInfo({
@@ -63,6 +64,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         email: "Guest",
         role: "Guest",
       });
+      console.log('AuthContext - Fetching User Info failed:', error);
     }
   };
 
@@ -89,12 +91,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (response.ok) {
         await fetchUserInfo(); // Fetch user info after login
         router.push("/dashboard");
-        console.log("User logged in successfully");
-      } else {
-        console.error("Login failed:", response.statusText);
       }
+      console.log(response.statusText)
     } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
+      console.error("AuthContext - logging in failed:", error);
     } finally {
       setLoading(false);
     }
@@ -115,12 +115,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           email: "Guest",
           role: "Guest",
         });
-        console.log("User logged out successfully");
-      } else {
-        console.error("Logout failed:", response.statusText);
       }
+      console.log(response.statusText);
     } catch (error) {
-      console.error("There was a problem with the logout operation:", error);
+      console.error("AuthContext - logging out failed:", error);
     } finally {
       setLoading(false);
     }
