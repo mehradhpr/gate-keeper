@@ -7,8 +7,15 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import UserDashboard from "@/app/(components)/UserDashboard";
 import AdminDashboard from "@/app/(components)/AdminDashboard";
+import { useAuth } from "@/app/(contexts)/AuthContext";
+
+
 
 const Dashboard = () => {
+
+  const { isAuthenticated } = useAuth();
+  const { getClientUserInfo } = useAuth();
+
   const user = {
     firstName: "John",
     lastName: "Doe",
