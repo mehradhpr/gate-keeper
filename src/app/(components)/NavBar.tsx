@@ -48,16 +48,23 @@ const NavBar = () => {
               <span className="text-white mr-4">Hello, {firstName}</span>
               <Link href="/dashboard">
                 <Button
-                  className={`mr-2 ${buttonClass} ${pathname === "/dashboard" ? "bg-blue-800" : ""}`}
+                  className={`mr-2 ${buttonClass} ${pathname === "/dashboard" ? "bg-blue-900" : ""}`}
                 >
                   Dashboard
                 </Button>
               </Link>
-              <Link href="/account-settings">
+              <Link href="/administration">
                 <Button
-                  className={`mr-2 ${buttonClass} ${pathname === "/account-settings" ? "bg-blue-800" : ""}`}
+                  className={`mr-2 bg-blue-600 hover:bg-amber-500 text-white rounded-md ${pathname === "/administration" ? "bg-amber-600" : ""}`}
                 >
-                  Account Settings
+                  Administration
+                </Button>
+              </Link>
+              <Link href="/account">
+                <Button
+                  className={`mr-2 ${buttonClass} ${pathname === "/account" ? "bg-blue-900" : ""}`}
+                >
+                  Account
                 </Button>
               </Link>
               <Link href="/">
@@ -76,7 +83,7 @@ const NavBar = () => {
               <Link href="/register">
                 <Button
                   className={`mr-2 ${buttonClass} ${
-                    pathname === "/register" ? "bg-blue-800" : ""
+                    pathname === "/register" ? "bg-blue-900" : ""
                   }`}
                 >
                   Register
@@ -85,7 +92,7 @@ const NavBar = () => {
               <Link href="/login">
                 <Button
                   className={`${buttonClass} ${
-                    pathname === "/login" ? "bg-blue-800" : ""
+                    pathname === "/login" ? "bg-blue-900" : ""
                   }`}
                 >
                   Log In

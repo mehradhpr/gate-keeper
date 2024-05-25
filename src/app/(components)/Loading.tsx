@@ -9,10 +9,10 @@ export const Loading = () => {
   if (!loading) return null;
 
   return (
-    <div className="fixed inset-0 bg-black flex flex-col items-center justify-center z-50 space-y-4">
+    <div className="fixed inset-0 bg-gray-900 flex flex-col items-center justify-center z-50 space-y-4">
       <Lock className="text-white h-16 w-16" />
       <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-white"></div>
-      <p className="text-white text-lg">GateKeeper</p>
+      <p className="text-white text-lg font-extrabold">GateKeeper</p>
     </div>
   );
 };

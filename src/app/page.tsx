@@ -1,12 +1,8 @@
 "use client";
-
-import { useState } from "react";
-import { useAuth } from "@/app/(contexts)/AuthContext";
+import React from "react";
 import { motion } from "framer-motion";
 
 const Home = () => {
-  const { login } = useAuth();
-  const [isLoginForm, setIsLoginForm] = useState(true);
 
   const title = "GateKeeper";
 

@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 const RootLayoutContent = ({ children }: { children: ReactNode }) => {
   return (
-    <main className={`${inter.className}`}>
+    <main>
       <NavBar />
       {children}
     </main>
@@ -21,7 +21,7 @@ const RootLayoutContent = ({ children }: { children: ReactNode }) => {
 const RootLayout = ({ children }: { children: ReactNode }) => {
   return (
     <html lang="en">
-    <body className="bg-gray-900">
+    <body className={`bg-gray-900 ${inter.className}`}>
     <LoadingProvider>
       <Loading />
       <AuthProvider>

@@ -39,7 +39,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center text-gray-100">
+    <div className="min-h-screen flex items-center justify-center text-gray-100 -mt-20">
       <Card className="w-full max-w-md p-6 bg-gray-800 text-gray-100">
         <CardHeader>
           <CardTitle className="text-2xl">Create An Account</CardTitle>
