@@ -3,7 +3,6 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
 import { ClientAccountInfo } from "@/interfaces/account-interface";
 import { decode } from "jsonwebtoken";
-import { useLoading } from "./LoadingContext";
 import { useRouter } from "next/navigation";
 
 interface AuthContextType {
@@ -71,7 +70,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         email: "Guest",
         role: "Guest",
       });
-      console.log('AuthContext - Fetching User Info failed:', error);
+      console.log('AuthContext Internal Error - Fetching User Info failed:', error);
     }
   };
 
@@ -99,9 +98,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         await fetchUserInfo(); // Fetch user info after login
         router.push("/dashboard");
       }
+
       console.log(response.statusText)
     } catch (error) {
-      console.error("AuthContext - logging in failed:", error);
+      console.error("AuthContext Internal Error - logging in failed:", error);
     } finally {
       setAuthLoading(false);
     }
@@ -125,7 +125,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
       console.log(response.statusText);
     } catch (error) {
-      console.error("AuthContext - logging out failed:", error);
+      console.error("AuthContext Internal Error - logging out failed:", error);
     } finally {
       setAuthLoading(false);
     }
@@ -152,7 +152,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         console.log("User registered successfully");
       }
     } catch (error) {
-      console.error("There was a problem with the registration operation:", error);
+      console.error("AuthContext Internal Error - Registration Failed:", error);
     } finally {
       setAuthLoading(false);
     }

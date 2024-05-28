@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/app/(contexts)/AuthContext";
-import { useLoading } from "@/app/(contexts)/LoadingContext";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
