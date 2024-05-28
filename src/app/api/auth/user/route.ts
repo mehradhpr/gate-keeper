@@ -1,32 +1,28 @@
-import { verifyToken } from "@/lib/jwt";
+import { NextRequest, NextResponse } from 'next/server';
+import { verifyToken } from '@/lib/jwt';
 
-export async function GET(request: Request): Promise<Response> {
-
-  // Get the token from the cookie
-  const cookie = request.headers.get('cookie');
-  const token = cookie
-    ?.split('; ')
-    .find(row => row.startsWith('authToken='))
-    ?.split('=')[1];
+export async function GET(request: NextRequest): Promise<NextResponse> {
+  // Get the token from the cookies using Next.js cookie utilities
+  const token = request.cookies.get('authToken')?.value;
 
   if (!token) {
-    return new Response(null, {
-      status: 401,
-      statusText: "Unauthorized, HTTP-only cookie not found",
-    });
+    return NextResponse.json(
+      { message: "Unauthorized, HTTP-only cookie not found" },
+      { status: 401 }
+    );
   }
 
   try {
     const userData = verifyToken(token);
-    return new Response(JSON.stringify(userData), {
+    return NextResponse.json(userData, {
       status: 200,
       statusText: "User data fetched successfully",
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    return new Response(null, {
-      status: 401,
-      statusText: "Unauthorized, invalid token",
-    });
+    return NextResponse.json(
+      { message: "Unauthorized, invalid token" },
+      { status: 401 }
+    );
   }
 }

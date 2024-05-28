@@ -1,8 +1,9 @@
-import { database } from "@/lib/db";
-import { hashPassword } from "@/lib/hash";
-import { generateToken } from "@/lib/jwt";
+import { NextRequest, NextResponse } from 'next/server';
+import { database } from '@/lib/db';
+import { hashPassword } from '@/lib/hash';
+import { generateToken } from '@/lib/jwt';
 
-export async function POST(request: Request): Promise<Response> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const formData = await request.json();
     const { firstName, lastName, email, password } = formData;
@@ -30,30 +31,29 @@ export async function POST(request: Request): Promise<Response> {
 
       const tokenString = generateToken(tokenContent);
 
-      // Set the HTTP-only, Secure cookie
-      const headers = new Headers();
-      headers.append(
-        "Set-Cookie",
-        `authToken=${tokenString}; HttpOnly; Secure; Path=/; Max-Age=604800`
-      );
-
-      return new Response(null, {
+      // Create a response with the HTTP-only, Secure cookie
+      const response = NextResponse.json(null, {
         status: 201, // HTTP status code for Created
         statusText: `${dbResponse.message} and token set successfully`,
-        headers: headers,
       });
+      response.cookies.set('authToken', tokenString, {
+        httpOnly: true,
+        secure: true,
+        path: '/',
+        maxAge: 604800,
+      });
+
+      return response;
     } else {
-      return new Response(null, {
+      return NextResponse.json(null, {
         status: 400, // HTTP status code for Bad Request
         statusText: dbResponse.message,
-        headers: { "Content-Type": "application/json" },
       });
     }
   } catch (error) {
-    return new Response(null, {
+    return NextResponse.json(null, {
       status: 500,
       statusText: "Internal Server Error for registration",
-      headers: { "Content-Type": "application/json" },
     });
   }
 }

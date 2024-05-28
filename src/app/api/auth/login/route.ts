@@ -1,8 +1,9 @@
-import { database } from "@/lib/db";
-import { comparePassword } from "@/lib/hash";
-import { generateToken } from "@/lib/jwt";
+import { NextRequest, NextResponse } from 'next/server';
+import { database } from '@/lib/db';
+import { comparePassword } from '@/lib/hash';
+import { generateToken } from '@/lib/jwt';
 
-export async function POST(request: Request): Promise<Response> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const formData = await request.json();
 
   try {
@@ -27,36 +28,43 @@ export async function POST(request: Request): Promise<Response> {
         const tokenString = generateToken(tokenContent);
 
         // Set the HTTP-only, Secure cookie
-        const headers = new Headers();
-        headers.append(
-          "Set-Cookie",
-          `authToken=${tokenString}; HttpOnly; Secure; Path=/; Max-Age=604800`
-        );
-
-        return new Response(null, {
+        const response = NextResponse.json(null, {
           status: 200,
           statusText: "User logged in successfully, and token is set",
-          headers: headers,
         });
+        response.cookies.set('authToken', tokenString, {
+          httpOnly: true,
+          secure: true,
+          path: '/',
+          maxAge: 604800,
+        });
+
+        return response;
       } else {
-        return new Response(null, {
-          status: 401,
-          statusText: "Unauthorized, invalid password",
-          headers: { "Content-Type": "application/json" },
-        });
+        return NextResponse.json(
+          null,
+          {
+            status: 401,
+            statusText: "Unauthorized, invalid password",
+          }
+        );
       }
     } else {
-      return new Response(null, {
-        status: 404,
-        statusText: `Unauthorized, from DB: ${dbResponse.message}`,
-        headers: { "Content-Type": "application/json" },
-      });
+      return NextResponse.json(
+        null,
+        {
+          status: 404,
+          statusText: `Unauthorized, from DB: ${dbResponse.message}`,
+        }
+      );
     }
   } catch (error) {
-    return new Response(null, {
-      status: 500,
-      statusText: "Internal Server Error",
-      headers: { "Content-Type": "application/json" },
-    });
+    return NextResponse.json(
+      null,
+      {
+        status: 500,
+        statusText: "Internal Server Error",
+      }
+    );
   }
 }

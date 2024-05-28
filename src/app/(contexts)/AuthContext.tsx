@@ -2,30 +2,20 @@
 
 import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
 import { ClientAccountInfo } from "@/interfaces/account-interface";
-import { decode } from "jsonwebtoken";
 import { useRouter } from "next/navigation";
 
 interface AuthContextType {
-  login: (loginFormData: {
-    email: string;
-    password: string;
-  }) => void;
-
+  login: (loginFormData: { email: string; password: string }) => void;
   logout: () => void;
-
   register: (registerFormData: {
     email: string;
     password: string;
     firstName: string;
     lastName: string;
   }) => void;
-
   isAuthenticated: () => boolean;
-
   getClientUserInfo: () => ClientAccountInfo;
-
   isAuthLoading: boolean;
-
   setAuthLoading: (loading: boolean) => void;
 }
 
@@ -70,20 +60,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         email: "Guest",
         role: "Guest",
       });
-      console.log('AuthContext Internal Error - Fetching User Info failed:', error);
+      console.log("AuthContext Internal Error - Fetching User Info failed:", error);
     }
   };
 
-  // Load user info from an authenticated endpoint
   useEffect(() => {
     fetchUserInfo();
   }, []);
 
-  // shared methods
-  const login = async (loginFormData: {
-    email: string;
-    password: string;
-  }) => {
+  const login = async (loginFormData: { email: string; password: string }) => {
     try {
       setAuthLoading(true);
       const response = await fetch("/api/auth/login", {
@@ -92,14 +77,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(loginFormData),
-        credentials: "include", // Ensure cookies are included in the requests
+        credentials: "include",
       });
       if (response.ok) {
-        await fetchUserInfo(); // Fetch user info after login
+        await fetchUserInfo();
         router.push("/dashboard");
       }
-
-      console.log(response.statusText)
+      console.log(response.statusText);
     } catch (error) {
       console.error("AuthContext Internal Error - logging in failed:", error);
     } finally {
@@ -122,6 +106,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           email: "Guest",
           role: "Guest",
         });
+        router.push("/login");  // Ensure redirection to login page on logout
       }
       console.log(response.statusText);
     } catch (error) {
