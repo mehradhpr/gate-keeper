@@ -1,12 +1,12 @@
 "use client";
 import React from 'react';
-import { useLoading } from '@/app/(contexts)/LoadingContext';
+import { useAuth } from '@/app/(contexts)/AuthContext';
 import { Lock } from 'lucide-react';
 
 export const Loading = () => {
-  const { loading } = useLoading();
+  const { isAuthLoading } = useAuth();
 
-  if (!loading) return null;
+  if (!isAuthLoading) return null;
 
   return (
     <div className="fixed inset-0 bg-black flex flex-col items-center justify-center z-50 space-y-4">

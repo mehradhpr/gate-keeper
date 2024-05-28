@@ -11,15 +11,23 @@ interface AuthContextType {
     email: string;
     password: string;
   }) => void;
+
   logout: () => void;
+
   register: (registerFormData: {
     email: string;
     password: string;
     firstName: string;
     lastName: string;
   }) => void;
+
   isAuthenticated: () => boolean;
+
   getClientUserInfo: () => ClientAccountInfo;
+
+  isAuthLoading: boolean;
+
+  setAuthLoading: (loading: boolean) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -33,8 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     email: "Guest",
     role: "Guest",
   });
-
-  const { setLoading } = useLoading();
+  const [isAuthLoading, setAuthLoading] = useState(false);
 
   const fetchUserInfo = async () => {
     try {
@@ -79,7 +86,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     password: string;
   }) => {
     try {
-      setLoading(true);
+      setAuthLoading(true);
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
@@ -96,13 +103,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error("AuthContext - logging in failed:", error);
     } finally {
-      setLoading(false);
+      setAuthLoading(false);
     }
   };
 
   const logout = async () => {
     try {
-      setLoading(true);
+      setAuthLoading(true);
       const response = await fetch("/api/auth/logout", {
         method: "POST",
         credentials: "include",
@@ -120,7 +127,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error("AuthContext - logging out failed:", error);
     } finally {
-      setLoading(false);
+      setAuthLoading(false);
     }
   };
 
@@ -131,7 +138,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     lastName: string;
   }) => {
     try {
-      setLoading(true);
+      setAuthLoading(true);
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
@@ -147,7 +154,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error("There was a problem with the registration operation:", error);
     } finally {
-      setLoading(false);
+      setAuthLoading(false);
     }
   };
 
@@ -161,7 +168,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ login, logout, register, isAuthenticated, getClientUserInfo }}
+      value={{ login, logout, register, isAuthenticated, getClientUserInfo, isAuthLoading, setAuthLoading }}
     >
       {children}
     </AuthContext.Provider>
