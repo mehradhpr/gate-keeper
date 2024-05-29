@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchUserInfo = async () => {
     try {
+      setAuthLoading(true);
       const response = await fetch("/api/auth/user", {
         method: "GET",
         credentials: "include",
@@ -51,6 +52,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           role: "Guest",
         });
       }
+      setAuthLoading(false);
       console.log(response.statusText);
     } catch (error) {
       setIsLoggedIn(false);

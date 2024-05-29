@@ -18,6 +18,18 @@ const notAllowedRoutesWhileAuthenticated = [
   /^\/access-denied/,    // Matches the access denied page '/access-denied'
 ];
 
+const isAuthenticated = async (request: NextRequest): Promise<boolean> => {
+  const token = request.cookies.get('authToken')?.value;
+  if (token) {
+    if (await verifyToken(token)) {
+      return true;
+    }
+    console.log('Middleware: Attempt to use an invalid token to authenticate');
+  }
+  return false;
+};
+
+
 export async function middleware(request: NextRequest) {
   try {
 
@@ -27,17 +39,11 @@ export async function middleware(request: NextRequest) {
     // check if the pathname is a public route
     const isPublicRoute = publicRoutes.some(regex => regex.test(pathname));
 
-    const token = request.cookies.get('authToken')?.value;
-    if (token) {
-      if (await verifyToken(token)) {
-        if (pathname === '/login') {
-          return NextResponse.redirect(new URL('/', request.nextUrl));
-        } else {
-          return NextResponse.next();
-        }
+    if (await isAuthenticated(request)) {
+      if (notAllowedRoutesWhileAuthenticated.some(regex => regex.test(pathname))) {
+        return NextResponse.redirect(new URL('/already-logged-in', request.nextUrl));
       } else {
-        console.log('Middleware: Attempt to use an invalid token to authenticate');
-        return NextResponse.redirect(new URL('/access-denied', request.nextUrl));
+        return NextResponse.next();
       }
     } else {
       if (!isPublicRoute) {
@@ -51,3 +57,4 @@ export async function middleware(request: NextRequest) {
     return NextResponse.error();
   }
 }
+
