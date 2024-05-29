@@ -6,7 +6,7 @@ const publicRoutes = [
   /^\/login$/,            // Matches the login page '/login'
   /^\/register$/,         // Matches the register page '/register'
   /^\/access-denied$/,    // Matches the access denied page '/access-denied'
-  /^\/api\/auth/,        // Matches the authentication API routes
+  /^\/api\/auth/,         // Matches the authentication API routes
   /^\/favicon\.ico$/,     // Matches the favicon '/favicon.ico'
   /^\/public/,            // Matches any path that starts with '/public'
   /^\/_next/,             // Matches any path that starts with '/_next'

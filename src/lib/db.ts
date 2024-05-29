@@ -44,6 +44,7 @@ export module database {
           lastName,
           email,
           password,
+          role
         },
       });
       return { success: true, message: "Account created successfully" };

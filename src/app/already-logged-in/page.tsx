@@ -7,11 +7,18 @@ import { useAuth } from "@/app/(contexts)/AuthContext";
 import { User, LogOut } from "lucide-react";
 
 export default function AlreadyLoggedIn() {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, setAuthLoading } = useAuth();
   const router = useRouter();
 
-  const handleLogout = async () => {
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push('./login');
+    }
+  }, [isAuthenticated, router]);
+
+  const handleLogout = () => {
     logout();
+    window.location.reload();
   };
 
   return (

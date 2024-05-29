@@ -2,7 +2,6 @@
 
 import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
 import { ClientAccountInfo } from "@/interfaces/account-interface";
-import { useRouter } from "next/navigation";
 
 interface AuthContextType {
   login: (loginFormData: { email: string; password: string }) => void;
@@ -17,12 +16,12 @@ interface AuthContextType {
   getClientUserInfo: () => ClientAccountInfo;
   isAuthLoading: boolean;
   setAuthLoading: (loading: boolean) => void;
+  deleteAccount: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [clientUserInfo, setClientUserInfo] = useState<ClientAccountInfo>({
     firstName: "Guest",
@@ -31,6 +30,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     role: "Guest",
   });
   const [isAuthLoading, setAuthLoading] = useState(false);
+
+  const deleteAccount = async () => {
+    try {
+      setAuthLoading(true);
+      const response = await fetch("/api/auth/delete-account", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      if (response.ok) {
+        await logout();
+        console.log(response.statusText);
+      }
+      setAuthLoading(false);
+    } catch (error) {
+      console.error("AuthContext Internal Error - Deleting Account Failed:", error);
+    }
+  }
 
   const fetchUserInfo = async () => {
     try {
@@ -68,7 +87,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     fetchUserInfo();
-  }, []);
+  }, [isLoggedIn]);
 
   const login = async (loginFormData: { email: string; password: string }) => {
     try {
@@ -83,7 +102,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
       if (response.ok) {
         await fetchUserInfo();
-        router.push("/dashboard");
       }
       console.log(response.statusText);
     } catch (error) {
@@ -108,7 +126,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           email: "Guest",
           role: "Guest",
         });
-        router.push("/login");  // Ensure redirection to login page on logout
       }
       console.log(response.statusText);
     } catch (error) {
@@ -155,7 +172,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ login, logout, register, isAuthenticated, getClientUserInfo, isAuthLoading, setAuthLoading }}
+      value={{ login, logout, register, isAuthenticated, getClientUserInfo, isAuthLoading, setAuthLoading, deleteAccount }}
     >
       {children}
     </AuthContext.Provider>

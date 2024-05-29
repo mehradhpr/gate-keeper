@@ -1,4 +1,4 @@
-// app/account-settings/page.tsx
+// app/account-settings/route.ts
 
 "use client";
 
@@ -6,10 +6,16 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@/app/(contexts)/AuthContext";
+import {useRouter} from "next/navigation";
 
 const Settings = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const { deleteAccount } = useAuth();
+
+  const router = useRouter();
 
   const handleChangePassword = () => {
     // Implement password change logic
@@ -18,7 +24,8 @@ const Settings = () => {
 
   const handleDeleteAccount = () => {
     // Implement account deletion logic
-    console.log("Account deleted");
+    deleteAccount();
+    router.push('./');
   };
 
   return (
