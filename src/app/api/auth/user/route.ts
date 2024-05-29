@@ -13,7 +13,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   }
 
   try {
-    const userData = verifyToken(token);
+    const userData = await verifyToken(token);
+    if (!userData) {
+      return NextResponse.json(
+        { message: "Unauthorized, invalid token" },
+        { status: 401 }
+      );
+    }
     return NextResponse.json(userData, {
       status: 200,
       statusText: "User data fetched successfully",

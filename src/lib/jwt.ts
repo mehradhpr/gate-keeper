@@ -1,41 +1,36 @@
-import jwt, { SignOptions, VerifyOptions, JwtPayload } from "jsonwebtoken";
-import dotenv from "dotenv";
-
-// Load environment variables from .env file
-dotenv.config();
+import { SignJWT, jwtVerify, JWTPayload, importPKCS8, importSPKI } from 'jose';
 
 // Read the keys directly from environment variables
-const privateKey = process.env.PRIVATE_KEY ?? '';
-const publicKey = process.env.PUBLIC_KEY ?? '';
+const privateKeyPEM = process.env.PRIVATE_KEY ?? '';
+const publicKeyPEM = process.env.PUBLIC_KEY ?? '';
 
-if (!privateKey || !publicKey) {
+if (!privateKeyPEM || !publicKeyPEM) {
   throw new Error('Environment variables PRIVATE_KEY and PUBLIC_KEY must be set');
 }
 
-export function generateToken(payload: object): string {
-  console.log('Generating token with payload:', payload)
-  const signOptions: SignOptions = {
-    expiresIn: "1h",
-    algorithm: "RS256",
-  };
+// Import keys in the appropriate format
+const privateKeyPromise = importPKCS8(privateKeyPEM, 'RS256');
+const publicKeyPromise = importSPKI(publicKeyPEM, 'RS256');
 
-  try {
-    const token = jwt.sign(payload, privateKey, signOptions);
-    return token;
-  } catch (error) {
-    console.error('Error generating token:', error);
-    throw new Error('Token generation failed');
-  }
+export async function generateToken(payload: JWTPayload): Promise<string> {
+  const privateKey = await privateKeyPromise;
+  const token = await new SignJWT(payload)
+    .setProtectedHeader({ alg: 'RS256' })
+    .setIssuedAt()
+    .setExpirationTime('1h')
+    .sign(privateKey);
+
+  return token;
 }
 
-export function verifyToken(token: string): JwtPayload | null | string {
-  const verifyOptions: VerifyOptions = {
-    algorithms: ["RS256"], // Algorithm used for verification
-  };
+export async function verifyToken(token: string): Promise<JWTPayload | null> {
+  const publicKey = await publicKeyPromise;
 
   try {
-    const decoded = jwt.verify(token, publicKey, verifyOptions);
-    return decoded as JwtPayload;
+    const { payload } = await jwtVerify(token, publicKey, {
+      algorithms: ['RS256'],
+    });
+    return payload;
   } catch (error) {
     console.error('Error verifying token:', error);
     return null; // Token verification failed

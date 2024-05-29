@@ -25,7 +25,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           role: dbResponse.account.role,
         };
 
-        const tokenString = generateToken(tokenContent);
+        const tokenString = await generateToken(tokenContent);
 
         // Set the HTTP-only, Secure cookie
         const response = NextResponse.json(null, {

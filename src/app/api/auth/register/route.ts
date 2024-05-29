@@ -29,7 +29,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         role: "user",
       };
 
-      const tokenString = generateToken(tokenContent);
+      const tokenString = await generateToken(tokenContent);
 
       // Create a response with the HTTP-only, Secure cookie
       const response = NextResponse.json(null, {

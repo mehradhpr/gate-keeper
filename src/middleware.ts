@@ -12,7 +12,13 @@ const publicRoutes = [
   /^\/_next/,             // Matches any path that starts with '/_next'
 ];
 
-export function middleware(request: NextRequest) {
+const notAllowedRoutesWhileAuthenticated = [
+  /^\/login/,            // Matches the login page '/login'
+  /^\/register/,         // Matches the register page '/register'
+  /^\/access-denied/,    // Matches the access denied page '/access-denied'
+];
+
+export async function middleware(request: NextRequest) {
   try {
 
     // extract the request pathname
@@ -21,16 +27,27 @@ export function middleware(request: NextRequest) {
     // check if the pathname is a public route
     const isPublicRoute = publicRoutes.some(regex => regex.test(pathname));
 
-    if (isPublicRoute) {
-      console.log("Middleware: Public Route - Pass through");
-      return NextResponse.next();
+    const token = request.cookies.get('authToken')?.value;
+    if (token) {
+      if (await verifyToken(token)) {
+        if (pathname === '/login') {
+          return NextResponse.redirect(new URL('/', request.nextUrl));
+        } else {
+          return NextResponse.next();
+        }
+      } else {
+        console.log('Middleware: Attempt to use an invalid token to authenticate');
+        return NextResponse.redirect(new URL('/access-denied', request.nextUrl));
+      }
     } else {
-      console.log("Middleware: Protected Route");
-      return NextResponse.next();
+      if (!isPublicRoute) {
+        console.log('Middleware: User is not authenticated and trying to access a restricted route');
+        return NextResponse.redirect(new URL('/access-denied', request.nextUrl));
+      } else {
+        return NextResponse.next();
+      }
     }
-
   } catch (error) {
-    console.error('Error in middleware:', error);
     return NextResponse.error();
   }
 }
