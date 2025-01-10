@@ -11,10 +11,7 @@ export async function POST(request: Request): Promise<Response> {
     });
     if (dbResponse.success && dbResponse.account) {
       // Check if the password is correct
-      const isMatch = await comparePassword(
-        formData.password,
-        dbResponse.account.password
-      );
+      const isMatch = await comparePassword(formData.password, dbResponse.account.password);
       if (isMatch) {
         // Authenticate user by generating a token
         const tokenContent = {

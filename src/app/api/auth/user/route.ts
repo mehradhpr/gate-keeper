@@ -1,13 +1,12 @@
 import { verifyToken } from "@/lib/jwt";
 
 export async function GET(request: Request): Promise<Response> {
-
   // Get the token from the cookie
-  const cookie = request.headers.get('cookie');
+  const cookie = request.headers.get("cookie");
   const token = cookie
-    ?.split('; ')
-    .find(row => row.startsWith('authToken='))
-    ?.split('=')[1];
+    ?.split("; ")
+    .find((row) => row.startsWith("authToken="))
+    ?.split("=")[1];
 
   if (!token) {
     return new Response(null, {

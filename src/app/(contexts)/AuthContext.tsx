@@ -2,15 +2,10 @@
 
 import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
 import { ClientAccountInfo } from "@/interfaces/account-interface";
-import { decode } from "jsonwebtoken";
-import { useLoading } from "./LoadingContext";
 import { useRouter } from "next/navigation";
 
 interface AuthContextType {
-  login: (loginFormData: {
-    email: string;
-    password: string;
-  }) => void;
+  login: (loginFormData: { email: string; password: string }) => void;
 
   logout: () => void;
 
@@ -71,7 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         email: "Guest",
         role: "Guest",
       });
-      console.log('AuthContext - Fetching User Info failed:', error);
+      console.log("AuthContext - Fetching User Info failed:", error);
     }
   };
 
@@ -81,10 +76,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   // shared methods
-  const login = async (loginFormData: {
-    email: string;
-    password: string;
-  }) => {
+  const login = async (loginFormData: { email: string; password: string }) => {
     try {
       setAuthLoading(true);
       const response = await fetch("/api/auth/login", {
@@ -99,7 +91,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         await fetchUserInfo(); // Fetch user info after login
         router.push("/dashboard");
       }
-      console.log(response.statusText)
+      console.log(response.statusText);
     } catch (error) {
       console.error("AuthContext - logging in failed:", error);
     } finally {
@@ -168,7 +160,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ login, logout, register, isAuthenticated, getClientUserInfo, isAuthLoading, setAuthLoading }}
+      value={{
+        login,
+        logout,
+        register,
+        isAuthenticated,
+        getClientUserInfo,
+        isAuthLoading,
+        setAuthLoading,
+      }}
     >
       {children}
     </AuthContext.Provider>

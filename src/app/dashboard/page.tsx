@@ -3,8 +3,6 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 const Dashboard = () => {
   const user = {
@@ -46,9 +44,7 @@ const Dashboard = () => {
             <CardTitle className="text-2xl">Work Desk</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-xl">
-              Here you can place your work-related content.
-            </p>
+            <p className="text-xl">Here you can place your work-related content.</p>
             {/* Add your work-related content here */}
           </CardContent>
         </Card>

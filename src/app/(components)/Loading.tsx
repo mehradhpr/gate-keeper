@@ -1,7 +1,7 @@
 "use client";
-import React from 'react';
-import { useAuth } from '@/app/(contexts)/AuthContext';
-import { Lock } from 'lucide-react';
+import React from "react";
+import { useAuth } from "@/app/(contexts)/AuthContext";
+import { Lock } from "lucide-react";
 
 export const Loading = () => {
   const { isAuthLoading } = useAuth();

@@ -29,9 +29,7 @@ const Settings = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2">
-              New Password
-            </label>
+            <label className="block text-sm font-medium mb-2">New Password</label>
             <Input
               type="password"
               value={password}
@@ -40,9 +38,7 @@ const Settings = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">
-              Confirm New Password
-            </label>
+            <label className="block text-sm font-medium mb-2">Confirm New Password</label>
             <Input
               type="password"
               value={confirmPassword}

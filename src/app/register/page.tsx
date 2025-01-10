@@ -1,12 +1,11 @@
 "use client";
 
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/app/(contexts)/AuthContext";
-import {useRouter} from "next/navigation";
-import {el} from "date-fns/locale";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
   const { register, isAuthenticated } = useAuth();

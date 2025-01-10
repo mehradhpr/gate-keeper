@@ -75,19 +75,13 @@ const NavBar = () => {
             <>
               <Link href="/register">
                 <Button
-                  className={`mr-2 ${buttonClass} ${
-                    pathname === "/register" ? "bg-blue-800" : ""
-                  }`}
+                  className={`mr-2 ${buttonClass} ${pathname === "/register" ? "bg-blue-800" : ""}`}
                 >
                   Register
                 </Button>
               </Link>
               <Link href="/login">
-                <Button
-                  className={`${buttonClass} ${
-                    pathname === "/login" ? "bg-blue-800" : ""
-                  }`}
-                >
+                <Button className={`${buttonClass} ${pathname === "/login" ? "bg-blue-800" : ""}`}>
                   Log In
                 </Button>
               </Link>

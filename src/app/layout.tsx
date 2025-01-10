@@ -20,12 +20,12 @@ const RootLayoutContent = ({ children }: { children: ReactNode }) => {
 const RootLayout = ({ children }: { children: ReactNode }) => {
   return (
     <html lang="en">
-    <body className="bg-gray-900">
-      <AuthProvider>
-        <Loading />
-        <RootLayoutContent>{children}</RootLayoutContent>
-      </AuthProvider>
-    </body>
+      <body className="bg-gray-900">
+        <AuthProvider>
+          <Loading />
+          <RootLayoutContent>{children}</RootLayoutContent>
+        </AuthProvider>
+      </body>
     </html>
   );
 };

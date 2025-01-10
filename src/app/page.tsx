@@ -5,9 +5,6 @@ import { useAuth } from "@/app/(contexts)/AuthContext";
 import { motion } from "framer-motion";
 
 const Home = () => {
-  const { login } = useAuth();
-  const [isLoginForm, setIsLoginForm] = useState(true);
-
   const title = "GateKeeper";
 
   return (
@@ -20,7 +17,7 @@ const Home = () => {
             backgroundSize: "200% 200%",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
-            animation: "gradient-wave 3s ease infinite"
+            animation: "gradient-wave 3s ease infinite",
           }}
         >
           {title}
