@@ -1,5 +1,6 @@
 const express = require("express");
 const connect_to_database = require("./config/db")
+const auth_routes = require("./modules/auth/auth.routes")
 require("dotenv").config();
 const app = express();
 connect_to_database();
@@ -13,12 +14,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post("/auth/login", (req, res) => {
-  console.log(req.body);
-});
-
-app.post("/auth/register", (req, res) => {
-  console.log(req.body);
-})
+app.use("/auth", auth_routes);
 
 module.exports = app;
