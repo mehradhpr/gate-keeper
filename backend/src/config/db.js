@@ -10,5 +10,4 @@ const connect_to_database = async () => {
   }
 };
 
-// Exporting the database connection function
 module.exports = connect_to_database;
