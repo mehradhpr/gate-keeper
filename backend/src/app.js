@@ -1,5 +1,8 @@
 const express = require("express");
+const connect_to_database = require("./config/db")
+require("dotenv").config();
 const app = express();
+connect_to_database();
 
 // Middleware to parse JSON bodies
 app.use(express.json());
