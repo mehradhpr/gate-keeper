@@ -1,13 +1,19 @@
 const http = require("http");
-const app = require("./app");
+const { app, initApp } = require("./app");
+const { serverConfig } = require("./config/default");
 
-const PORT = 3000;
-
+const PORT = serverConfig.port;
 const server = http.createServer(app);
 
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+initApp()
+  .then(() => {
+    server.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to start the server:", err);
+  });
 
 // Handle termination signals to gracefully shut down the server
 process.on("SIGINT", () => {
