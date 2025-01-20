@@ -1,6 +1,6 @@
 const express = require("express");
-const connect_to_database = require("./config/db")
-const auth_routes = require("./modules/auth/auth.routes")
+const connect_to_database = require("./config/db");
+const auth_routes = require("./modules/auth/auth.routes");
 require("dotenv").config();
 const app = express();
 connect_to_database();
