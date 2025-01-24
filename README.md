@@ -73,3 +73,9 @@ Authentication should have a dedicated route.
 ## Frontend Developer notes
 
 Use Vite with React and TypeScript.
+Use React Router Dom for routing.
+pages directory contains react components that are used to render a specific route defined in App.tsx.
+components directory contains react components that can be used anywhere.
+For styling, CSS modules are chosen due to their simplicity and effectiveness for medium-sized projects.
+
+Each component, will be under its own folder alongside with a CSS module file and an index.ts as an export file
