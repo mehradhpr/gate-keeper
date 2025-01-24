@@ -1,4 +1,5 @@
 import {useState} from "react";
+import styles from './Register.module.css'
 
 function Register(): JSX.Element {
 
@@ -18,9 +19,9 @@ function Register(): JSX.Element {
 
     }
     return (
-        <div>
+        <div >
             <h1>Registeration Page</h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className={styles.form}>
                 <label>First Name</label><br/>
                 <input type="text" value={firstName} onChange={(e) => {setFirstName(e.target.value)}}/><br/>
                 <label>Last Name</label><br/>

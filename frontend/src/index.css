@@ -1,0 +1,26 @@
+html {
+    background-color: rgb(44, 47, 50);
+    color: rgb(176, 197, 215);
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+button {
+    padding: 5px;
+    border: solid 1px;
+    border-radius: 5px;
+    background-color: rgb(40, 80, 129);
+    font-weight: bold;
+    color: rgb(176, 197, 215)
+}
+
+a {
+    color: rgb(198, 193, 222);
+}
+
+input {
+    background-color: rgb(198, 193, 222);
+    border: solid 1px;
+    border-radius: 4px;
+    padding-block: 5px;
+    padding-inline: 10px;
+}
