@@ -1,11 +1,12 @@
 function Nav(): JSX.Element {
+
     return (
         <div>
         <h1>Nav</h1>
         <ul>
-            <a href="/"><li>Home</li></a>
-            <a href="login"><li>Login</li></a>
-            <a href="register"><li>Register</li></a>
+            <li><a href="/">Home</a></li>
+            <li><a href="login">Login</a></li>
+            <li><a href="register">Register</a></li>
         </ul>
         </div>
     )
