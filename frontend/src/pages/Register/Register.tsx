@@ -19,21 +19,21 @@ function Register(): JSX.Element {
 
     }
     return (
-        <div >
-            <h1>Registeration Page</h1>
-            <form onSubmit={handleSubmit} className={styles.form}>
-                <label>First Name</label><br/>
-                <input type="text" value={firstName} onChange={(e) => {setFirstName(e.target.value)}}/><br/>
-                <label>Last Name</label><br/>
-                <input type="text" value={lastName} onChange={(e) => {setLastName(e.target.value)}}/><br/>
-                <label>Email</label><br/>
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}/><br/>
-                <label>Password</label><br/>
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/><br/>
-                <label>Re-enter Password</label><br/>
-                <input type="password" value={rePassword} onChange={(e) => setRePassword(e.target.value)}/><br/>
+        <div className={styles.register}>
+            <h1>Register</h1>
+            <form onSubmit={handleSubmit} >
+                <label>First Name</label>
+                <input type="text" value={firstName} onChange={(e) => {setFirstName(e.target.value)}}/>
+                <label>Last Name</label>
+                <input type="text" value={lastName} onChange={(e) => {setLastName(e.target.value)}}/>
+                <label>Email</label>
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                <label>Password</label>
+                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                <label>Re-enter Password</label>
+                <input type="password" value={rePassword} onChange={(e) => setRePassword(e.target.value)}/>
                 {error && <div>{error}</div>}
-                <button type="submit">{loading ? 'Registering Account....' : 'Register'}</button>
+                <button type="submit">{loading ? 'Registering....' : 'Register'}</button>
             </form>
         </div>
     )

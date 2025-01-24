@@ -1,3 +1,4 @@
+import { Lock } from 'lucide-react';
 import styles from './Nav.module.css'
 
 function Nav(): JSX.Element {
@@ -9,6 +10,7 @@ function Nav(): JSX.Element {
             <li><a href="login">Login</a></li>
             <li><a href="register">Register</a></li>
         </ul>
+        <Lock></Lock>
         </div>
     )
 }

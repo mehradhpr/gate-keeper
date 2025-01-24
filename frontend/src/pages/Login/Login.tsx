@@ -1,4 +1,5 @@
 import {useState} from "react";
+import styles from './Login.module.css'
 
 function Login(): JSX.Element {
 
@@ -15,13 +16,13 @@ function Login(): JSX.Element {
 
     }
     return (
-        <div>
-            <h1>Login Page</h1>
+        <div className={styles.login}>
+            <h1>Login</h1>
             <form onSubmit={handleSubmit}>
-                <label>Email</label><br/>
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}/><br/>
-                <label>Password</label><br/>
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/><br/>
+                <label>Email</label>
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                <label>Password</label>
+                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
                 {error && <div>{error}</div>}
                 <button type="submit">{loading ? 'Logging in....' : 'Login'}</button>
             </form>
