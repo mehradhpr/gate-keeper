@@ -32,7 +32,7 @@ function Register(): JSX.Element {
                 <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
                 <label>Re-enter Password</label>
                 <input type="password" value={rePassword} onChange={(e) => setRePassword(e.target.value)}/>
-                {error && <div>{error}</div>}
+                {error && <div className="error">{error}</div>}
                 <button type="submit">{loading ? 'Registering....' : 'Register'}</button>
             </form>
         </div>
