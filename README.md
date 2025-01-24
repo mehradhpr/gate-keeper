@@ -54,7 +54,7 @@ To follow the practice of separation of concerns, the backend and frontend are i
 - Password: Any
 - Roles: All
 
-## Backend
+## Backend Developer Notes
 
 ### Architecture
 
@@ -70,12 +70,16 @@ Authentication should have a dedicated route.
 - Token is placed in the HTTP Authorization Header upon successful login
   Authorization should be implemented as a middleware to protect certain resources
 
-## Frontend Developer notes
+## Frontend Developer Notes
 
 Use Vite with React and TypeScript.
+
 Use React Router Dom for routing.
+
 pages directory contains react components that are used to render a specific route defined in App.tsx.
+
 components directory contains react components that can be used anywhere.
+
 For styling, CSS modules are chosen due to their simplicity and effectiveness for medium-sized projects.
 
-Each component, will be under its own folder alongside with a CSS module file and an index.ts as an export file
+Each component, will be under its own folder alongside with a CSS module file and an index.ts as an export file.
