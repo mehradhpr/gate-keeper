@@ -58,7 +58,7 @@ To follow the practice of separation of concerns, the backend and frontend are i
 
 ### Architecture
 
-Follows the Modular Monolith backend structure
+**Follows the Modular Monolith backend structure.**
 App and Server are separate files due to these reasons:
 
 - Test app without starting the server
@@ -71,3 +71,5 @@ Authentication should have a dedicated route.
   Authorization should be implemented as a middleware to protect certain resources
 
 ## Frontend Developer notes
+
+Use Vite with React and TypeScript.
