@@ -1,13 +1,15 @@
 {
     "compilerOptions": {
-      "module": "NodeNext",  // Output ESM
-      "moduleResolution": "NodeNext",  // Resolve modules for ESM
-      "outDir": "./dist",
-      "rootDir": "./src",
-      "target": "ES2022",
+      "target": "ES2020",
+      "module": "NodeNext", // Use ESM
+      "moduleResolution": "NodeNext", // For ESM resolution
+      "outDir": "./dist", // Output directory
+      "rootDir": "./src", // Source directory
       "strict": true,
       "esModuleInterop": true,
-      "skipLibCheck": true
+      "skipLibCheck": true,
+      "declaration": true // Generate .d.ts files
     },
-    "include": ["src/**/*"]
+    "include": ["src/**/*"], // Include all files in src
+    "exclude": ["node_modules", "test"] // Exclude unnecessary files
   }
