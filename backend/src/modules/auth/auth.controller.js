@@ -6,6 +6,7 @@ const {
 
 const register = async (req, res) => {
   try {
+    console.log(req.body);
     // Register Account with the request body
     await registerAccount(req.body);
 
@@ -15,6 +16,7 @@ const register = async (req, res) => {
       message: "Account is Successfully Registered",
     });
   } catch (err) {
+    console.log(err);
     res.status(400).json({
       success: false,
       message: `Registration Error: ${err.message}`,

@@ -17,6 +17,30 @@ function Register(): JSX.Element {
         setError('');
         setLoading(true);
 
+        try {
+            const response = await fetch("http://localhost:5011/auth/register", {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    password: password,
+                })
+            });
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+            setError(error)
+        } finally {
+            setLoading(false);
+        }
+        
+        
+
+
     }
     return (
         <div className={styles.register}>

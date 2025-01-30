@@ -1,0 +1,7 @@
+Requirements:
+
+Login/Register/Logout
+Admin Page:
+- Create/modify/delete Roles
+- Assign, Unassign roles to different accounts
+- 

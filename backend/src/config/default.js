@@ -1,6 +1,6 @@
 module.exports = {
   serverConfig: {
-    port: 5000,
+    port: 5011,
   },
   database: {
     uri: process.env.MONGO_URI,
