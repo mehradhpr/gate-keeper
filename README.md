@@ -1,85 +1,142 @@
-# Gate Keeper
+# Gate Keeper 🔒
 
-This is a full-stack project with the main objective of exploring modern standards of web authentication and authorization.
+**A Modular, Reusable Role-Based Access Control (RBAC) System**  
+*Built with the MERN Stack (MongoDB, Express, React, Node.js) + TypeScript*  
 
-Gate Keeper follows the RBAC (Role-Based Access Control) system, where each account will be assigned one or multple roles, and each role grants access to a specific range of resources to the assignee. Role management is done by the administrator of the system, althrough might not limited to them solely.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) 
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0%2B-blue)](https://www.typescriptlang.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-7.0%2B-green)](https://www.mongodb.com/)
 
-To follow the practice of separation of concerns, the backend and frontend are in distinct directories.
+---
 
-**Main App Requirements** [Subject to Change]
+## 🎯 Project Goals
+1. **Reusable RBAC Core**: Create a plug-and-play authorization system for any MERN stack project.
+2. **Enterprise Scalability**: Support dynamic roles, permissions, and multi-tenancy.
+3. **Developer Experience**: Offer clear APIs, TypeScript types, and extensible architecture.
+4. **Employer-Ready**: Demonstrate modern full-stack patterns (JWT, middleware, containerization).
 
-1. The user of an account can log in using the account's email and password. Successful entry will grant access to some resources specified by the roles assigned to that particular account.
-2. A new account can be created by providing the following information:
-   - First Name
-   - Last Name
-   - Email (Must be Verified)
-   - Password (Strict Rules Apply)
-3. The user can log out at any time.
-4. Admin is a special account that has all the privilages and some extra:
-   - Create a New Role
-   - Delete a Role
-   - Modify a Role
-   - Assign a role to an account
-   - Unassign a role from an account
+---
 
-**Model Definitions**
+## 🚀 Features
 
-- Account
+### **Core**
+- **Role/Permission Management**: Define granular permissions (`user:read`, `invoice:delete`).
+- **JWT Authentication**: Stateless auth with refresh tokens.
+- **Middleware-Driven**: `checkPermission('user:edit')` endpoint protection.
+- **MongoDB Backend**: Flexible schema for evolving RBAC needs.
 
-  - ID
-  - First Name
-  - Last Name
-  - Email
-  - Password (encrypted)
-  - Roles Assigned
+### **Frontend**
+- **Role-Aware UI**: Auto-hide unauthorized buttons/routes.
+- **Material-UI Components**: Modern, themable interface.
+- **Context API**: Centralized auth state management.
 
-- Role
+### **DevOps**
+- **Dockerized**: Pre-configured containers for MongoDB + backend/frontend.
+- **CI/CD Ready**: GitHub Actions pipeline example.
+- **Env-Based Config**: Toggle features via `.env` files.
 
-  - ID
-  - Name
-  - Permissions
-  - Assigned Accounts
+---
 
-- Permission
-  - ID
-  - Name
-  - Resources
+## 🛠️ Tech Stack
 
-**_Special Admin Account_**
+| Layer       | Technologies                                                                 |
+|-------------|------------------------------------------------------------------------------|
+| **Frontend**| React 18, TypeScript, Vite, Material-UI, Axios, React Router 6               |
+| **Backend** | Node.js 20, Express, MongoDB 7, Mongoose, TypeScript, JWT, Bcrypt            |
+| **DevOps**  | Docker, NGINX, GitHub Actions, Jest, React Testing Library                   |
 
-- ID: Any
-- First Name: "Admin"
-- Last Name: "Admin"
-- Email: Any
-- Password: Any
-- Roles: All
+---
 
-## Backend Developer Notes
+## 🏗️ Architecture
 
-### Architecture
+### **Backend Structure
 
-**Follows the Modular Monolith backend structure.**
-App and Server are separate files due to these reasons:
+gatekeeper-backend/
+├── src/
+│   ├── config/        # Env vars, DB connection
+│   ├── models/        # MongoDB schemas (User, Role)
+│   ├── middleware/    # Auth & RBAC logic
+│   ├── routes/        # API endpoints
+│   ├── services/      # Business logic (e.g., TokenService)
+│   └── app.ts         # Express setup
 
-- Test app without starting the server
-- Separation of concerns: App is responsible for routing and configuration, while server manages the server lifecycle
+### **Frontend Structure**
+gatekeeper-frontend/
+├── src/
+│   ├── api/           # Axios API clients
+│   ├── components/    # Reusable RBAC-aware UI
+│   ├── contexts/      # Auth state management
+│   ├── hooks/         # usePermissions(), useRoles()
+│   └── pages/         # Next.js-style routing
 
-Authentication should have a dedicated route.
+---
 
-- Token Based Authentication --> JSON Web Tokens | Stateless Authentication System
-- Token is placed in the HTTP Authorization Header upon successful login
-  Authorization should be implemented as a middleware to protect certain resources
+## 📈 Milestones
 
-## Frontend Developer Notes
+### **Phase 1: Foundation (Complete)**
+- JWT Authentication Flow
+- MongoDB User/Role Schemas
+- Login Page UI
 
-Use Vite with React and TypeScript.
+### **Phase 2: Core RBAC (Current)**
+- [ ] Permission Middleware
+- [ ] Role Management API
+- [ ] Admin Dashboard UI
 
-Use React Router Dom for routing.
+### **Phase 3: Extensibility**
+- [ ] Plugin System (Audit Logs, 2FA)
+- [ ] PostgreSQL Adapter
+- [ ] CLI Tool
 
-pages directory contains react components that are used to render a specific route defined in App.tsx.
+---
 
-components directory contains react components that can be used anywhere.
+## 🛠️ Getting Started
 
-For styling, CSS modules are chosen due to their simplicity and effectiveness for medium-sized projects.
+### **Prerequisites**
+- Node.js 20+
+- MongoDB 7+
+- Docker (optional)
 
-Each component, will be under its own folder alongside with a CSS module file and an index.ts as an export file.
+### **Installation**
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/yourusername/gate-keeper.git
+   cd gate-keeper
+   ```
+
+2. Backend setup:
+   ```bash
+   cd backend && npm install
+   cp .env.example .env  # Update with your secrets
+   npm run dev
+   ```
+
+3. Frontend setup:
+   ```bash
+   cd frontend && npm install
+   npm run dev
+   ```
+
+4. Seed initial data:
+   ```bash
+   npm run seed  # Creates admin@example.com / admin123
+   ```
+
+---
+
+## 🤝 Contributing
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/awesome-feature`)
+3. Commit changes (`git commit -m 'Add awesome feature'`)
+4. Push to branch (`git push origin feature/awesome-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+Distributed under the MIT License. See `LICENSE` for details.
+
+---
+
+**Built with ❤️ by [Your Name]**  
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue)](https://linkedin.com/in/yourprofile)
