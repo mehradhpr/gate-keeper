@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+      "module": "NodeNext",  // Output ESM
+      "moduleResolution": "NodeNext",  // Resolve modules for ESM
+      "outDir": "./dist",
+      "rootDir": "./src",
+      "target": "ES2022",
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true
+    },
+    "include": ["src/**/*"]
+  }
