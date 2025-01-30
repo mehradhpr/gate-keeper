@@ -1,0 +1,7 @@
+{
+    "name": "gatekeeper",
+    "private": true,
+    "workspaces": [
+      "packages/*"
+    ]
+  }
