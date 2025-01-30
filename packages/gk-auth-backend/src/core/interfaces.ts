@@ -7,10 +7,10 @@ export interface Account {
 }
 
 export interface DatabaseAdapter {
-    createUser(user: Omit<Account, 'id'>): Promise<Account>;
-    getUserById(id: string): Promise<Account | null>;
-    getUserByEmail(email: string): Promise<Account | null>;
-    updateUser(id: string, updates: Partial<Account>): Promise<Account>;
-    deleteUser(id: string): Promise<void>;
+    createAccount(account: Omit<Account, 'id'>): Promise<Account>;
+    getAccountById(id: string): Promise<Account | null>;
+    getAccountByEmail(email: string): Promise<Account | null>;
+    updateAccount(id: string, updates: Partial<Account>): Promise<Account>;
+    deleteAccount(id: string): Promise<void>;
 }
 
