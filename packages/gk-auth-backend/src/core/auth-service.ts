@@ -1,6 +1,7 @@
 import { sign, verify } from 'jsonwebtoken';
 import { compare, hash } from 'bcrypt';
-import { AuthDatabaseAdapter, AuthAccount } from './interfaces.js';
+import { AuthDatabaseAdapter, AuthAccount, AuthOptions } from './interfaces.js';
+
 import {
   InvalidCredentialsError,
   AccountAlreadyExistsError,
@@ -13,11 +14,12 @@ const DEFAULT_JWT_OPTIONS = {
 };
 
 export class AuthService {
-  constructor(
-    private readonly adapter: DatabaseAdapter,
-    private readonly jwtSecret: string,
-    private readonly jwtOptions = DEFAULT_JWT_OPTIONS
-  ) {}
+  private adapter: AuthDatabaseAdapter<AuthAccount>;
+  private 
+
+  constructor(options: AuthOptions<AuthAccount>) {
+
+  }
 
   async register(email: string, password: string): Promise<Account> {
     const existingUser = await this.adapter.getAccountByEmail(email);

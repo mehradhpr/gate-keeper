@@ -16,10 +16,9 @@ export interface AuthAccount {
 }
 export interface AuthDatabaseAdapter<T extends AuthAccount> {
     getAccount(id: string): Promise<T | null>;
-    registerAccount(account: T): Promise<void>;
+    addAccount(account: T): Promise<void>;
     updateAccount(account: T): Promise<void>;
     deleteAccount(id: string): Promise<void>;
-    authenticate(id: string, password: string): Promise<string | null>;
 }
 export interface PasswordPolicyOptions {
     minLength?: number;
