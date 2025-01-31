@@ -1,6 +1,6 @@
 {
   "name": "@mrhsp/auth-backend",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Gate Keeper Backend Authentication Package",
   "type": "module",
   "main": "./dist/index.js",
