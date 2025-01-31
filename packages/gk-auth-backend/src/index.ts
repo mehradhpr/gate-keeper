@@ -1,3 +1,3 @@
 export * from './core/interfaces.js';
-
-console.log("Hello");
+export * from './core/auth-service.js';
+export * from './core/errors.js';

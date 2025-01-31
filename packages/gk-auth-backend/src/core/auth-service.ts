@@ -1,6 +1,6 @@
 import { sign, verify } from 'jsonwebtoken';
 import { compare, hash } from 'bcrypt';
-import { DatabaseAdapter, Account } from './interfaces.js';
+import { AuthDatabaseAdapter, AuthAccount } from './interfaces.js';
 import {
   InvalidCredentialsError,
   AccountAlreadyExistsError,
