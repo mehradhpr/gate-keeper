@@ -1,4 +1,7 @@
-import { sign, verify, Algorithm, SignOptions } from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
+const { sign, verify } = jwt;
+type SignOptions = jwt.SignOptions;
+type Algorithm = jwt.Algorithm;
 import { compare, hash } from "bcrypt";
 import { validatePassword } from "./utils/validate-password.js";
 import {
@@ -13,7 +16,6 @@ import {
   InvalidCredentialsError,
   AccountAlreadyExistsError,
   AccountNotFoundError,
-  PasswordPolicyError,
 } from "./errors.js";
 
 const DEFAULT_JWT_OPTIONS: TokenOptions = {

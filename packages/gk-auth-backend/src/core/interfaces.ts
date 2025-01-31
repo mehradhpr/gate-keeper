@@ -9,12 +9,6 @@ export interface AuthOptions<T extends AuthAccount> {
 export interface AuthAccount {
   id: string;
   passwordHash: string;
-  email?: string;
-  firstName?: string;
-  lastName?: string;
-  roles?: string[];
-  createdAt?: Date;
-  updatedAt?: Date;
 }
 
 export interface AuthDatabaseAdapter<T extends AuthAccount> {
