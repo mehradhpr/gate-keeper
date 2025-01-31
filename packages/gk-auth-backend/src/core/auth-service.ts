@@ -1,5 +1,6 @@
 import { sign, verify, Algorithm, SignOptions } from 'jsonwebtoken';
 import { compare, hash } from 'bcrypt';
+import { validatePassword } from './utils/validate-password.js';
 import {
     AuthDatabaseAdapter,
     AuthAccount,
@@ -16,7 +17,7 @@ import {
 } from './errors.js';
 
 const DEFAULT_JWT_OPTIONS: TokenOptions = {
-    secret: '', // Placeholder, will be overridden by user input
+    secret: '',
     expiresIn: '1h',
     algorithm: 'HS256'
 };
@@ -56,7 +57,7 @@ export class AuthService<T extends AuthAccount> {
       }
   
       // Validate password policy
-      this.validatePassword(password);
+      validatePassword(password, this.passwordPolicy);
   
       // Create account object with proper typing
       const account: T = {
@@ -83,11 +84,11 @@ export class AuthService<T extends AuthAccount> {
         return this.generateToken(account.id);
     }
 
-    async resetPassword(userId: string, newPassword: string): Promise<void> {
-        this.validatePassword(newPassword);
+    async resetPassword(id: string, newPassword: string): Promise<void> {
+        validatePassword(newPassword, this.passwordPolicy);
         
-        const user = await this.adapter.getAccount(userId);
-        if (!user) throw new AccountNotFoundError(userId);
+        const user = await this.adapter.getAccount(id);
+        if (!user) throw new AccountNotFoundError(id);
 
         const updatedAccount: T = {
             ...user,
@@ -96,50 +97,6 @@ export class AuthService<T extends AuthAccount> {
         };
 
         await this.adapter.updateAccount(updatedAccount);
-    }
-
-    private validatePassword(password: string): void {
-        const policy = this.passwordPolicy;
-        if (!policy) return;
-
-        // Length check
-        if (policy.minLength && password.length < policy.minLength) {
-            throw new PasswordPolicyError(
-                `Password must be at least ${policy.minLength} characters`
-            );
-        }
-
-        // Character type checks
-        const counts = {
-            lower: (password.match(/[a-z]/g) || []).length,
-            upper: (password.match(/[A-Z]/g) || []).length,
-            number: (password.match(/[0-9]/g) || []).length,
-            symbol: (password.match(/[^a-zA-Z0-9]/g) || []).length
-        };
-
-        if (policy.minLowercase && counts.lower < policy.minLowercase) {
-            throw new PasswordPolicyError(
-                `Password must contain at least ${policy.minLowercase} lowercase letters`
-            );
-        }
-
-        if (policy.minUppercase && counts.upper < policy.minUppercase) {
-            throw new PasswordPolicyError(
-                `Password must contain at least ${policy.minUppercase} uppercase letters`
-            );
-        }
-
-        if (policy.minNumbers && counts.number < policy.minNumbers) {
-            throw new PasswordPolicyError(
-                `Password must contain at least ${policy.minNumbers} numbers`
-            );
-        }
-
-        if (policy.minSymbols && counts.symbol < policy.minSymbols) {
-            throw new PasswordPolicyError(
-                `Password must contain at least ${policy.minSymbols} symbols`
-            );
-        }
     }
 
     private async hashPassword(password: string): Promise<string> {
