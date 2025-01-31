@@ -1,25 +1,27 @@
-export class AuthError extends Error {
-    constructor(message: string) {
+export class InvalidCredentialsError extends Error {
+  constructor() {
+      super('Invalid credentials');
+      this.name = 'InvalidCredentialsError';
+  }
+}
+
+export class AccountAlreadyExistsError extends Error {
+  constructor(id: string) {
+      super(`Account with id ${id} already exists`);
+      this.name = 'AccountAlreadyExistsError';
+  }
+}
+
+export class AccountNotFoundError extends Error {
+  constructor(id: string) {
+      super(`Account with id ${id} not found`);
+      this.name = 'AccountNotFoundError';
+  }
+}
+
+export class PasswordPolicyError extends Error {
+  constructor(message: string) {
       super(message);
-      this.name = this.constructor.name;
-      Error.captureStackTrace(this, this.constructor);
-    }
+      this.name = 'PasswordPolicyError';
   }
-  
-  export class InvalidCredentialsError extends AuthError {
-    constructor() {
-      super('Invalid email or password');
-    }
-  }
-  
-  export class AccountAlreadyExistsError extends AuthError {
-    constructor(email: string) {
-      super(`User with email ${email} already exists`);
-    }
-  }
-  
-  export class AccountNotFoundError extends AuthError {
-    constructor(id: string) {
-      super(`User with ID ${id} not found`);
-    }
-  }
+}

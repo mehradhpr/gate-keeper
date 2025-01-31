@@ -1,25 +1,29 @@
+import { SignOptions } from 'jsonwebtoken';
+
 export interface AuthOptions<T extends AuthAccount> {
     adapter: 'in-memory' | AuthDatabaseAdapter<T>;
+    token: TokenOptions;
     passwordPolicy?: PasswordPolicyOptions;
-    token?: TokenOptions;
-    session?: SessionOptions;
 }
+
 export interface AuthAccount {
-    id: string; 
+    id: string;
     passwordHash: string;
     email?: string;
     firstName?: string;
     lastName?: string;
-    roles?: string;
+    roles?: string[];
     createdAt?: Date;
     updatedAt?: Date;
 }
+
 export interface AuthDatabaseAdapter<T extends AuthAccount> {
     getAccount(id: string): Promise<T | null>;
     addAccount(account: T): Promise<void>;
     updateAccount(account: T): Promise<void>;
     deleteAccount(id: string): Promise<void>;
 }
+
 export interface PasswordPolicyOptions {
     minLength?: number;
     minLowercase?: number;
@@ -27,15 +31,7 @@ export interface PasswordPolicyOptions {
     minNumbers?: number;
     minSymbols?: number;
 }
-export interface TokenOptions {
+
+export interface TokenOptions extends SignOptions {
     secret: string;
-    expiresIn?: string | number;
 }
-
-export interface SessionOptions {
-    strategy?: 'jwt' | 'database';
-    cookieName?: string;
-    cookiePath?: string;
-    cookieSecure?: boolean;
-}
-
